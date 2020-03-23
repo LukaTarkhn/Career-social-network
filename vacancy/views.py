@@ -1,3 +1,5 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def vacancy(request):
+    return render(request, 'vacancy/vacancy.html')

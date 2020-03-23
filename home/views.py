@@ -1,5 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 
-def index(request):
-    return render(request, 'vacancy/index.html')
+def home(request):
+    if request.user.is_authenticated:
+        return redirect('vacancy')
+    else:
+        return render(request, 'home/index.html')

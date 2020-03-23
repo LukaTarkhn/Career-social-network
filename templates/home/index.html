@@ -1,4 +1,21 @@
-{% extends 'base.html' %}
-{% block content %}
-<h1>HOME</h1>
-{% endblock %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Home</title>
+</head>
+<body>
+    <div>
+        <a href="{% url 'vacancy' %}">vacancy</a>
+        <a href="{% url 'members' %}">members</a>
+        <a href="{% url 'organizations' %}">organizations</a>
+    </div>
+    <h1>it's a first page when user not registered and authorized already</h1>
+
+    <a href="{% url 'login' %}">Log In</a>
+    <a href="{% url 'register' %}">Register</a>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<header>
+    <div>
+        <a href="{% url 'vacancy' %}">vacancy</a>
+        <a href="{% url 'members' %}">members</a>
+        <a href="{% url 'organizations' %}">organizations</a>
+    </div>
+    {% if user.is_authenticated %}
+        <p style="color: #993300">Welcome, {{ user.first_name }} </p>
+        <a href="javascript:{document.getElementById('logout').submit()}">Logout</a>
+        <form action="{% url 'logout' %}" method="POST" id="logout">
+            {% csrf_token %}
+            <input type="hidden">
+        </form>
+    {% else %}
+        <a href="{% url 'login' %}">Log In</a>
+        <a href="{% url 'register' %}">Register</a>
+    {% endif %}
+    <br><span>HEADER IS HERE</span>
+</header>

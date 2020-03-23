@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign-up</title>
+</head>
+<body>
+    {% include 'partials/_alert.html' %}
+    <form action="{% url 'register' %}" method="POST">{% csrf_token %}
+        <input type="text" name="first_name" required placeholder="First name"> <br>
+        <input type="text" name="last_name" required placeholder="Last name"> <br>
+        <input type="email" name="email"  required placeholder="Email"> <br>
+        <input type="password" name="password" required placeholder="Password"> <br>
+        <input type="password" name="re_password" required placeholder="Confirm password"> <br>
+        <input type="submit" value="Register"> <br>
+    </form>
+
+    <a href="{% url 'home' %}">Home</a>
+</body>
+</html>
