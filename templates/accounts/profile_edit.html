@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Edit profile{% endblock %}
+{% block content %}
+    <h1>profile edit</h1>
+    {% include 'partials/_alert.html' %}
+    <form action="{% url 'profile_edit' %}" method="POST">{% csrf_token %}
+      <label for="first_name">First name:</label>
+      <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}"><br><br>
+      <label for="last_name">Last name:</label>
+      <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}"><br><br>
+      <label for="username">Url link</label>
+      <input type="text" id="username" name="username" value="{{ user.username }}"><br><br>
+      <input type="submit" value="Submit">
+    </form>
+{% endblock %}

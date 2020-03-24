@@ -1,5 +1,34 @@
 {% extends 'base.html' %}
 {% block title %}Specialists{% endblock %}
 {% block content %}
-    <h1>Members list here</h1>
+    <h1>Members list</h1>
+    {% if page_obj %}
+        {% for account in page_obj %}
+        <div style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
+            <p>Name: {{ account.first_name }} {{ account.last_name }}</p>
+            <p>Email: {{ account.email }}</p>
+            <a href="{% url 'profile' account.username %}">View resume</a>
+        </div>
+        {% endfor %}
+        <div class="pagination" style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?p=1">&laquo; first</a>
+                    <a href="?p={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    | Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} |
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?p={{ page_obj.next_page_number }}">next</a>
+                    <a href="?p={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    {% else %}
+        <p>No resumes for display</p>
+    {% endif %}
+
 {% endblock %}

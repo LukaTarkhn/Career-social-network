@@ -1,12 +1,11 @@
 <header>
     <div>
-        <a href="{% url 'vacancy' %}">vacancy</a>
+        <a href="{% url 'vacancies' %}">vacancies</a>
         <a href="{% url 'members' %}">members</a>
         <a href="{% url 'organizations' %}">organizations</a>
     </div>
     {% if user.is_authenticated %}
-        <p style="color: #993300">Welcome, {{ user.first_name }} </p>
-        <a href="javascript:{document.getElementById('logout').submit()}">Logout</a>
+        <p style="color: #993300">Welcome, {{ user.first_name }} | <a href="{% url 'profile_edit' %}">Edit</a> | <a href="javascript:{document.getElementById('logout').submit()}">Logout</a></p>
         <form action="{% url 'logout' %}" method="POST" id="logout">
             {% csrf_token %}
             <input type="hidden">

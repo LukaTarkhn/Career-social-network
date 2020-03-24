@@ -1,6 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages, auth
 from django.contrib.auth import get_user_model, authenticate
+
+from accounts.models import Account
+from .forms import PersonalEditForm, PasswordChangeForm
 import secrets
 import time
 
@@ -45,7 +48,7 @@ def register(request):
             return redirect('register')
     else:
         if request.user.is_authenticated:
-            return redirect('vacancy')
+            return redirect('vacancies')
         else:
             return render(request, 'accounts/register.html')
 
@@ -59,13 +62,13 @@ def login(request):
         if user is not None:
             auth.login(request, user)
             messages.success(request, 'You are now logged in')
-            return redirect('vacancy')
+            return redirect('vacancies')
         else:
             messages.error(request, 'Invalid credentials')
             return redirect('login')
     else:
         if request.user.is_authenticated:
-            return redirect('vacancy')
+            return redirect('vacancies')
         else:
             return render(request, 'accounts/login.html')
 
@@ -74,8 +77,46 @@ def logout(request):
     if request.method == 'POST':
         auth.logout(request)
         messages.success(request, 'You are now logged out')
-        return redirect('vacancy')
+        return redirect('vacancies')
 
 
-def dashboard(request):
-    return render(request, 'accounts/dashboard.html')
+def profile(request, username):
+    user_profile = get_object_or_404(Account, username=username)
+    context = {
+        'user_profile': user_profile
+    }
+    return render(request, 'accounts/profile.html', context)
+
+
+def profile_edit(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = PersonalEditForm(request.POST, instance=request.user)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Personal information updated')
+                return redirect('profile_edit')
+            else:
+                messages.error(request, 'This link already used')
+                return redirect('profile_edit')
+        return render(request, 'accounts/profile_edit.html')
+    else:
+        messages.error(request, 'How about register first?')
+        return redirect('register')
+
+
+def change_password(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = PasswordChangeForm(request.POST, instance=request.user)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Information updated')
+                return redirect('change_password')
+            else:
+                messages.error(request, 'This email already used')
+                return redirect('change_password')
+        return render(request, 'accounts/change_password.html')
+    else:
+        messages.error(request, 'How about register first?')
+        return redirect('register')

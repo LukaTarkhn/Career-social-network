@@ -30,7 +30,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'home.apps.PagesConfig',
-    'vacancy.apps.VacancyConfig',
+    'vacancies.apps.vacanciesConfig',
     'members.apps.MembersConfig',
     'organizations.apps.OrganizationsConfig',
     'accounts.apps.AccountsConfig',
