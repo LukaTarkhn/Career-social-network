@@ -4,8 +4,22 @@
         <a href="{% url 'members' %}">members</a>
         <a href="{% url 'organizations' %}">organizations</a>
     </div>
+    <br>
     {% if user.is_authenticated %}
-        <p style="color: #993300">Welcome, {{ user.first_name }} | <a href="{% url 'profile_edit' %}">Edit</a> | <a href="javascript:{document.getElementById('logout').submit()}">Logout</a></p>
+        <div style="color: #993300">
+            Welcome, {{ user.first_name }}
+            {% if request.user.profile_pic %}
+                <img src="{{ request.user.profile_pic.url }}" alt="" style="width: 60px; height: 60px">
+            {% else %}
+                |Img None|
+            {% endif %}
+            |
+            <a href="{% url 'profile' user.username %}">My profile</a>
+            | <a href="javascript:{document.getElementById('logout').submit()}">Logout</a>
+            <div>
+                <a href="#">Add organization</a>
+            </div>
+        </div>
         <form action="{% url 'logout' %}" method="POST" id="logout">
             {% csrf_token %}
             <input type="hidden">
@@ -14,5 +28,4 @@
         <a href="{% url 'login' %}">Log In</a>
         <a href="{% url 'register' %}">Register</a>
     {% endif %}
-    <br><span>HEADER IS HERE</span>
 </header>

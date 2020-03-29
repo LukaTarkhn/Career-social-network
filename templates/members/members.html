@@ -4,11 +4,13 @@
     <h1>Members list</h1>
     {% if page_obj %}
         {% for account in page_obj %}
-        <div style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
-            <p>Name: {{ account.first_name }} {{ account.last_name }}</p>
-            <p>Email: {{ account.email }}</p>
-            <a href="{% url 'profile' account.username %}">View resume</a>
-        </div>
+            {% if account.username != user.username%}
+                <div style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
+                    <p>Name: {{ account.first_name }} {{ account.last_name }}</p>
+                    <p>Email: {{ account.email }}</p>
+                    <a href="{% url 'profile' account.username %}">View resume</a>
+                </div>
+            {% endif %}
         {% endfor %}
         <div class="pagination" style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
             <span class="step-links">

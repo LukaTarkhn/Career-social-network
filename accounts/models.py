@@ -1,5 +1,5 @@
-# Custom user registration/authorization module
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager)
 
 
@@ -40,10 +40,20 @@ class MyAccountManager(BaseUserManager):
 
 
 class Account(AbstractBaseUser):
+    GENDER_CHOICES = (
+        ('M', 'Male'),
+        ('F', 'Female'),
+    )
     email = models.EmailField(verbose_name='email address', max_length=60, unique=True)
     first_name = models.CharField(verbose_name='first name', max_length=30)
     last_name = models.CharField(verbose_name='last name', max_length=40)
     username = models.CharField(max_length=30, unique=True)
+    profile_pic = models.ImageField(verbose_name='profile picture', null=True, blank=True)
+    about_me = models.TextField(verbose_name='about me', max_length=250, null=True, blank=True)
+    birth_day = models.DateField(verbose_name='birth_day', null=True, blank=True)
+    living_city = models.CharField(verbose_name='living city', max_length=100, null=True, blank=True)
+    gender = models.CharField(verbose_name='gender', max_length=1, choices=GENDER_CHOICES, default='M')
+    website = models.CharField(verbose_name='website', max_length=100, null=True, blank=True)
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
     last_login = models.DateTimeField(verbose_name='last login', auto_now=True)
     is_admin = models.BooleanField(default=False)
@@ -68,3 +78,15 @@ class Account(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
+
+#####for organization use
+# class AccountMore(models.Model):
+#     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+#     profile_pic = models.ImageField(null=True, blank=True)
+#     about_me = models.TextField(max_length=250, null=True, blank=True)
+#     birth_day = models.DateField(null=True, blank=True)
+#     living_city = models.CharField(max_length=100, null=True, blank=True)
+#     last_update = models.DateTimeField(auto_now=True, null=True, blank=True)
+#
+#     def __str__(self):
+#         return str(self.user)

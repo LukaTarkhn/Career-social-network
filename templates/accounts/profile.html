@@ -1,6 +1,33 @@
 {% extends 'base.html' %}
 {% block title %}{{ user_profile.username }}{% endblock %}
 {% block content %}
-<h1>{{user_profile.first_name}} {{ user_profile.last_name }}</h1>
+    {% if user_profile.profile_pic %}
+        <img src="{{ user_profile.profile_pic.url }}" alt="">
+    {% else %}
+        <p>Here is static image</p>
+    {% endif %}
+<h1>
+    {{user_profile.first_name}} {{ user_profile.last_name }}
+    {% if user_profile.username == user.username %}
+        <a href="{% url 'profile_edit' %}">Edit</a>
+    {% endif %}
+</h1>
     <p>Email: {{ user_profile.email }}</p>
+    {% if user_profile.gender == 'M' %}
+        <P>Gender: Male</P>
+    {% else %}
+        <P>Gender: Female</P>
+    {% endif %}
+    {% if user_profile.birth_day %}
+        <p>Age: {{ Age }} years</p>
+    {% endif %}
+    {% if user_profile.about_me %}
+        <p>About me: {{ user_profile.about_me }}</p>
+    {% endif %}
+    {% if user_profile.living_city %}
+        <p>Living: {{ user_profile.living_city }}</p>
+    {% endif %}
+    {% if user_profile.website %}
+        <p>Personal website: {{ user_profile.website }}</p>
+    {% endif %}
 {% endblock %}

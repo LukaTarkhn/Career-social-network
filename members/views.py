@@ -6,6 +6,7 @@ from accounts.models import Account
 
 def members(request):
     accounts = Account.objects.order_by('-last_login')
+    
     paginator = Paginator(accounts, 8)
 
     page_number = request.GET.get('p')
