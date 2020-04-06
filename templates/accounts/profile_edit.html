@@ -16,20 +16,14 @@
       <input type="text" id="first_name" name="first_name" value="{{ form.initial.first_name }}"><br><br>
       <label for="last_name">Last name:</label>
       <input type="text" id="last_name" name="last_name" value="{{ form.initial.last_name }}"><br><br>
+      <label for="phone">Phone number:</label>
+      <input type="text" id="phone" name="phone" {% if form.initial.phone != none %}value="{{ form.initial.phone }}"{% endif %}><br><br>
       <label for="living_city">Living city</label>
       <input type="text" id="living_city" name="living_city" {% if form.initial.living_city != none %}value="{{ form.initial.living_city }}"{% endif %}><br><br>
       <label for="birth_day">Birth day</label>
       <input type="text" id="birth_day" name="birth_day" {% if form.initial.birth_day != none %}value="{{ form.initial.birth_day|date:"SHORT_DATE_FORMAT" }}"{% else %}value="mm/dd/yyyy"{% endif %}><br><br>
       <label for="gender">Gender</label>
-      <select id="gender" name="gender" value="{{ form.initial.gender }}">
-          {% if form.initial.gender == 'F' %}
-              <option value="M">Male</option>
-              <option value="F" selected>Female</option>
-          {% else %}
-              <option value="M" selected>Male</option>
-              <option value="F">Female</option>
-          {% endif %}
-      </select><br><br>
+      {{form.gender}}<br><br>
       <label for="about_me">About me</label>
       <textarea name="about_me" id="about_me" cols="30" rows="10" maxlength="250">
           {% if form.initial.about_me != none %}{{ form.initial.about_me }}{% endif %}

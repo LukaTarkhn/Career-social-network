@@ -1,5 +1,4 @@
 from django.db import models
-from django.conf import settings
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager)
 
 
@@ -48,6 +47,7 @@ class Account(AbstractBaseUser):
     first_name = models.CharField(verbose_name='first name', max_length=30)
     last_name = models.CharField(verbose_name='last name', max_length=40)
     username = models.CharField(max_length=30, unique=True)
+    phone = models.CharField(verbose_name='Phone', max_length=40, null=True, blank=True)
     profile_pic = models.ImageField(verbose_name='profile picture', null=True, blank=True)
     about_me = models.TextField(verbose_name='about me', max_length=250, null=True, blank=True)
     birth_day = models.DateField(verbose_name='birth_day', null=True, blank=True)
@@ -78,15 +78,3 @@ class Account(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
-
-#####for organization use
-# class AccountMore(models.Model):
-#     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
-#     profile_pic = models.ImageField(null=True, blank=True)
-#     about_me = models.TextField(max_length=250, null=True, blank=True)
-#     birth_day = models.DateField(null=True, blank=True)
-#     living_city = models.CharField(max_length=100, null=True, blank=True)
-#     last_update = models.DateTimeField(auto_now=True, null=True, blank=True)
-#
-#     def __str__(self):
-#         return str(self.user)

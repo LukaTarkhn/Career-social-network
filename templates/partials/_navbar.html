@@ -17,7 +17,8 @@
             <a href="{% url 'profile' user.username %}">My profile</a>
             | <a href="javascript:{document.getElementById('logout').submit()}">Logout</a>
             <div>
-                <a href="#">Add organization</a>
+                <a href="{% url 'user_organizations' %}">My organizations</a><br>
+                <a href="{% url 'organization_add' %}">Add organization</a>
             </div>
         </div>
         <form action="{% url 'logout' %}" method="POST" id="logout">

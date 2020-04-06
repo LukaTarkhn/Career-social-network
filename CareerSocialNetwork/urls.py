@@ -9,6 +9,7 @@ urlpatterns = [
     path('', include('members.urls')),
     path('', include('organizations.urls')),
     path('profile/', include('accounts.urls')),
+    path('', include('organizations.urls')),
     path('admin/', admin.site.urls),
 
     path('reset_password',

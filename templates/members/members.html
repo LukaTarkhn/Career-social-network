@@ -6,6 +6,11 @@
         {% for account in page_obj %}
             {% if account.username != user.username%}
                 <div style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
+                    {% if account.profile_pic %}
+                     <img src="{{ account.profile_pic.url }}" alt="" style="width: 80px; height: 80px">
+                    {% else %}
+                        no img
+                    {% endif %}
                     <p>Name: {{ account.first_name }} {{ account.last_name }}</p>
                     <p>Email: {{ account.email }}</p>
                     <a href="{% url 'profile' account.username %}">View resume</a>

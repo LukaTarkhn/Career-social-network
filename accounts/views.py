@@ -95,55 +95,15 @@ def profile(request, username):
     return render(request, 'accounts/profile.html', context)
 
 
-# def profile_edit(request):
-#     if request.user.is_authenticated:
-#         if request.method == 'POST':
-#             form = PersonalEditForm(request.POST, request.FILES, instance=request.user)
-#             if form.is_valid():
-#                 form.save()
-#                 messages.success(request, 'Personal information updated')
-#                 return redirect('profile_edit')
-#             else:
-#                 messages.error(request, form.errors)
-#                 return redirect('profile_edit')
-#         return render(request, 'accounts/profile_edit.html')
-#     else:
-#         messages.error(request, 'How about register first?')
-#         return redirect('register')
-
-
 def profile_edit(request):
     if request.user.is_authenticated:
-        context = {}
+        form = PersonalEditForm(request.POST or None, request.FILES or None, instance=request.user)
         if request.method == 'POST':
-            form = PersonalEditForm(request.POST or None,  request.FILES or None, instance=request.user)
             if form.is_valid():
-                form.initial = {
-                    'first_name': request.POST['first_name'],
-                    'last_name': request.POST['last_name'],
-                    'about_me': request.POST['about_me'],
-                    'birth_day': request.POST['birth_day'],
-                    'living_city': request.POST['living_city'],
-                    'gender': request.POST['gender'],
-                    'website': request.POST['website'],
-                }
                 form.save()
                 messages.success(request, 'Personal information updated')
                 return redirect('profile_edit')
-        else:
-            form = PersonalEditForm(
-                initial={
-                    'first_name': request.user.first_name,
-                    'last_name': request.user.last_name,
-                    'about_me': request.user.about_me,
-                    'birth_day': request.user.birth_day,
-                    'living_city': request.user.living_city,
-                    'gender': request.user.gender,
-                    'website': request.user.website,
-                    'profile_pic': request.user.profile_pic
-                }
-            )
-        context['form'] = form
+        context = {'form': form}
         return render(request, 'accounts/profile_edit.html', context)
     else:
         messages.error(request, 'How about register first?')
@@ -205,46 +165,3 @@ def change_email_url(request):
         messages.error(request, 'How about register first?')
         return redirect('register')
 
-##### this 2 i can use in editing and adding organization
-# def personal_info_edit(request):
-#     context = {}
-#     user = request.user
-#     if not user.is_authenticated:
-#         messages.error(request, "Please sign-in")
-#         return redirect('login')
-#     if request.method == 'POST':
-#         form = PersonalMoreEditForm(request.POST or None, request.FILES or None)
-#         if form.is_valid():
-#             obj = form.save(commit=False)
-#             person = Account.objects.filter(email=user.email).first()
-#             obj.user = person
-#             obj.save()
-#
-#         context['form'] = form
-#     return render(request, 'accounts/profile_info_edit.html', context)
-
-# def personal_info_edit(request, slug):
-#     context = {}
-#     user = request.user
-#     if not user.is_authenticated:
-#         messages.error(request, "Please sign-in")
-#         return redirect('login')
-#     personal_info = get_object_or_404(AccountMore, slug=slug)
-#     if request.method == 'POST':
-#         form = PersonalMoreEditForm(request.POST or None, request.FILES or None, instance=request.user)
-#         if form.is_valid():
-#             obj = form.save(commit=False)
-#             person = Account.objects.filter(email=user.email).first()
-#             obj.user = person
-#             personal_info = obj
-#
-#     form = PersonalMoreEditForm(
-#         initial={
-#             'profile_pic': personal_info.profile_pic,
-#             'about_me': personal_info.about_me,
-#             'birth_day': personal_info.birth_day,
-#             'living_city': personal_info.living_city
-#         }
-#     )
-#     context['form'] = form
-#     return render(request, 'accounts/profile_info_edit.html', context)

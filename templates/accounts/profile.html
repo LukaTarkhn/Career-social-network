@@ -13,10 +13,11 @@
     {% endif %}
 </h1>
     <p>Email: {{ user_profile.email }}</p>
-    {% if user_profile.gender == 'M' %}
-        <P>Gender: Male</P>
-    {% else %}
-        <P>Gender: Female</P>
+    {% if user_profile.phone %}
+        <p>Phone number: {{ user_profile.phone }}</p>
+    {% endif %}
+    {% if user_profile.gender %}
+        <P>Gender: {{user_profile.get_gender_display}}</P>
     {% endif %}
     {% if user_profile.birth_day %}
         <p>Age: {{ Age }} years</p>
