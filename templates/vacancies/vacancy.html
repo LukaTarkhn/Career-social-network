@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}{{ organization_profile.organization_name }}{% endblock %}
+{% block content %}
+    {% if organization_profile.organization_logo %}
+        <img src="{{ organization_profile.organization_logo.url }}" alt="">
+    {% else %}
+        <p>Here is static image</p>
+    {% endif %}
+<h1>
+    {{organization_profile.organization_name}}
+    {% for owner in owners %}
+        {% if organization_profile.id == owner.organization.id and owner.role == '2'%}
+            <a class="ui-button ui-widget ui-corner-all" href="{% url 'organization_edit' organization_profile.url %}">Edit</a>
+        {% endif %}
+    {% endfor %}
+</h1>
+    {% if organization_profile.organization_about %}
+        <p>About me: {{ organization_profile.organization_about }}</p>
+    {% endif %}
+    {% if organization_profile.organization_email %}
+        <p>Email: {{ organization_profile.organization_email }}</p>
+    {% endif %}
+    {% if organization_profile.organization_phone %}
+        <p>Phone number: {{ organization_profile.organization_phone }}</p>
+    {% endif %}
+    {% if organization_profile.number_of_employees %}
+        <p>Employers: {{organization_profile.get_number_of_employees_display}}</p>
+    {% endif %}
+    {% if organization_profile.organization_address %}
+        <p>Main office address: {{ organization_profile.organization_address }}</p>
+    {% endif %}
+    {% if organization_profile.organization_website %}
+        <p>Organization website: {{ organization_profile.organization_website }}</p>
+    {% endif %}
+    {% if organization_profile.organization_header_logo %}
+        <img src="{{ organization_profile.organization_header_logo.url }}" alt="" style="width: 500px">
+    {% else %}
+        <p>Here is header image</p>
+    {% endif %}
+{% endblock %}

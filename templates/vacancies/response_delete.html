@@ -1,0 +1,8 @@
+<p>
+   Are you sure you want to delete this vacancy: <b>{{ vacancy_for_delete.title }}</b> <br>
+  <small><i>if you delete this vacancy, you can't recover it</i></small>
+</p><br>
+
+<form action="{% url 'vacancy_delete' vacancy_for_delete.url %}" method="POST">{% csrf_token %}
+  <input class="ui-button ui-widget ui-corner-all" type="submit" value="Confirm delete">
+</form>

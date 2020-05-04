@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Edit specialization{% endblock %}
+{% block content %}
+    <h1>Specialization edit</h1>
+    {% include 'partials/_settings-links.html' %}
+    {% include 'partials/_alert.html' %}
+
+    <form action="" method="POST">{% csrf_token %}
+        {{ form.as_p }}
+      <input class="btn btn-mdb-color" type="submit" value="Submit">
+    </form>
+<br><br>
+{% endblock %}

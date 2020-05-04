@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block title %}Education{% endblock %}
+{% block content %}
+    <h1>Education</h1>
+    {% include 'partials/_settings-links.html' %}
+    <a class="btn btn-deep-purple" href="#">Add education</a>
+    {% if educations %}
+        {% for education in educations %}
+                <div style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
+                    <p>University name: {{ education.name }}</p>
+                    <p>Faculty: {{ education.faculty }}</p>
+                    <p>Degree: {{ education.get_degree_display }}</p>
+                    {% if experience.location %}
+                        <p>Location: {{ education.location }}</p>
+                    {% endif %}
+                    <p>Start date: {{ education.start_date }}</p>
+                    {% if education.end_date and not education.present %}
+                        <p>End date: {{ education.end_date }}</p>
+                    {% endif %}
+                    {% if education.present %}
+                        <p>Present: {{ education.present }}</p>
+                    {% endif %}
+                    {% if education.specialization %}
+                        <p>Specialization: {{ education.specialization }}</p>
+                    {% endif %}
+                    <a class="btn btn-mdb-color" href="#">Edit</a>
+                    <a class="btn btn-red" href="#">Delete</a>
+                </div>
+        {% endfor %}
+        <div class="pagination" style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
+            <span class="step-links">
+                {% if educations.has_previous %}
+                    <a href="?p=1">&laquo; first</a>
+                    <a href="?p={{ educations.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    | Page {{ educations.number }} of {{ educations.paginator.num_pages }} |
+                </span>
+
+                {% if educations.has_next %}
+                    <a href="?p={{ educations.next_page_number }}">next</a>
+                    <a href="?p={{ educations.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    {% else %}
+        <p>No educations for display</p>
+    {% endif %}
+    <h2>More education</h2>
+    <a class="btn btn-deep-purple" href="#">Add more education</a>
+    {% if more_educations %}
+        {% for education in more_educations %}
+                <div style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
+                    <p>Educational place name: {{ education.name }}</p>
+                    <p>Course name: {{ education.course_name }}</p>
+                    <p>Theme: {{ education.theme }}</p>
+                    <p>Start date: {{ education.start_date }}</p>
+                    {% if education.end_date and not education.present %}
+                        <p>End date: {{ education.end_date }}</p>
+                    {% endif %}
+                    {% if education.present %}
+                        <p>Present: {{ education.present }}</p>
+                    {% endif %}
+                    {% if education.about_course %}
+                        <p>About course: {{ education.about_course }}</p>
+                    {% endif %}
+                    <a class="btn btn-mdb-color" href="#">Edit</a>
+                    <a class="btn btn-red" href="#">Delete</a>
+                </div>
+        {% endfor %}
+        <div class="pagination" style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
+            <span class="step-links">
+                {% if educations.has_previous %}
+                    <a href="?p=1">&laquo; first</a>
+                    <a href="?p={{ educations.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    | Page {{ educations.number }} of {{ educations.paginator.num_pages }} |
+                </span>
+
+                {% if educations.has_next %}
+                    <a href="?p={{ educations.next_page_number }}">next</a>
+                    <a href="?p={{ educations.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    {% else %}
+        <p>No educations for display</p>
+    {% endif %}
+    <h2>Languages</h2>
+    <a class="btn btn-deep-purple" href="#">Add language</a>
+    {% if languages %}
+        {% for language in languages %}
+                <div style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
+                    <p>Language: {{ language.get_language_display }}</p>
+                    <p>Level: {{ language.get_level_display }}</p>
+                    <a class="btn btn-mdb-color" href="#">Edit</a>
+                    <a class="btn btn-red" href="#">Delete</a>
+                </div>
+        {% endfor %}
+        <div class="pagination" style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
+            <span class="step-links">
+                {% if languages.has_previous %}
+                    <a href="?p=1">&laquo; first</a>
+                    <a href="?p={{ languages.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    | Page {{ languages.number }} of {{ languages.paginator.num_pages }} |
+                </span>
+
+                {% if languages.has_next %}
+                    <a href="?p={{ languages.next_page_number }}">next</a>
+                    <a href="?p={{ languages.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    {% else %}
+        <p>No languages for display</p>
+    {% endif %}
+{% endblock %}

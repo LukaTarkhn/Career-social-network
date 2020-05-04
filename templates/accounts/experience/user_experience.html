@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Experience{% endblock %}
+{% block content %}
+    <h1>Experience</h1>
+    {% include 'partials/_settings-links.html' %}
+    <a class="btn btn-deep-purple" href="{% url 'experience_add' %}">Add work experience</a>
+    {% if page_obj %}
+        {% for experience in page_obj %}
+                <div style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
+                    <p>Company name: {{ experience.name }}</p>
+                    <p>Position: {{ experience.position }}</p>
+                    <p>Location: {{ experience.location }}</p>
+                    <p>Start date: {{ experience.start_date }}</p>
+                    {% if experience.end_date and not experience.present %}
+                        <p>End date: {{ experience.end_date }}</p>
+                    {% endif %}
+                    {% if experience.present %}
+                        <p>Present: {{ experience.present }}</p>
+                    {% endif %}
+                    <p>Skills: {{ experience.get_skills_display }}</p>
+                    <p>Responsibilities: {{ experience.responsibilities }}</p>
+                    <a class="btn btn-mdb-color" href="{% url 'experience_edit' experience.id %}">Edit</a>
+                    <a class="btn btn-red" href="{% url 'experience_delete' experience.id %}" rel="modal:open">Delete</a>
+                </div>
+        {% endfor %}
+        <div class="pagination" style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?p=1">&laquo; first</a>
+                    <a href="?p={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    | Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} |
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?p={{ page_obj.next_page_number }}">next</a>
+                    <a href="?p={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    {% else %}
+        <p>No Experience for display</p>
+    {% endif %}
+
+{% endblock %}
