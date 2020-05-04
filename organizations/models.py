@@ -10,7 +10,6 @@ class Organization(models.Model):
         ('1000', '100-1000'),
         ('5000', '1000+'),
     )
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     url = models.CharField(verbose_name='Url field', max_length=30, unique=True)
     organization_name = models.CharField(verbose_name='Organization name', max_length=30, null=True)
     organization_phone = models.CharField(verbose_name='Organization phone', max_length=50, null=True, blank=True)
@@ -26,6 +25,20 @@ class Organization(models.Model):
     organization_address = models.CharField(verbose_name='Organization address', max_length=100, null=True, blank=True)
     number_of_employees = models.CharField(verbose_name='Number of employees', max_length=100, null=True, blank=True,
                                            choices=NUMBER_OF_EMPLOYEES)
+    date_created = models.DateTimeField(verbose_name='Create date', auto_now_add=True)
+
+    def __str__(self):
+        return str(self.organization_name)
+
+
+class OrganizationOwner(models.Model):
+    ROLES = (
+        ('1', 'Moderator'),
+        ('2', 'Administrator'),
+    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
+    role = models.CharField(max_length=20, null=True, blank=True, choices=ROLES, default='1')
     date_created = models.DateTimeField(verbose_name='Create date', auto_now_add=True)
 
     def __str__(self):

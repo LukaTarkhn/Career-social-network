@@ -1,2 +1,9 @@
-<a href="{% url 'profile_edit' %}">Edit profile info</a>
-<a href="{% url 'change_email_url' %}">Edit privacy</a>
+<div style="display: flex">
+    <a class="btn btn-mdb-color" href="{% url 'user_responses'%}">Responses</a>
+    <a class="btn btn-mdb-color" href="{% url 'profile_edit' %}">Personal information</a>
+    <a class="btn btn-mdb-color" href="{% url 'change_email_url' %}">Privacy</a>
+    <a class="btn btn-mdb-color" href="{% url 'specialization_edit' %}">Specialization</a>
+    <a class="btn btn-mdb-color" href="{% url 'experience' %}">Work experience</a>
+    <a class="btn btn-mdb-color" href="{% url 'education' %}">Education</a>
+    <a class="btn btn-mdb-color" href="{% url 'contact_edit' %}">Contact information</a>
+</div>

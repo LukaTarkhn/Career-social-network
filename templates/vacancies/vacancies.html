@@ -1,5 +1,105 @@
 {% extends 'base.html' %}
-{% block title %}vacancies{% endblock %}
+{% block title %}Vacancies{% endblock %}
 {% block content %}
-    <h1>vacancies list here</h1>
+    <h1>Vacancies list</h1>
+    <form method="GET" action="vacancies" style="width: 400px">
+        <input class="form-control" type="search" name="search" placeholder="Search by title, location and organization name" />
+        <label for="sortBy">Sort By</label>
+        <select id="sortBy" class="selectpicker" name="sortBy" data-width="400px">
+            <option value="1" {% if sortBy == '1' %}selected{% endif %}>By add date</option>
+            <option value="2" {% if sortBy == '2' %}selected{% endif %}>From maximum salary</option>
+            <option value="3" {% if sortBy == '3' %}selected{% endif %}>From minimum salary</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+    <form method="GET" action="vacancies" style="width: 400px">
+        <select class="selectpicker" multiple name="sphere" title="Choose spheres..." data-width="400px" data-max-options="5">
+            {% for sphere in SPHERES %}
+                <option value="{{sphere.0}}" {% if sphere.0 in spheres%}selected{% endif %}>{{ sphere.1 }}</option>
+            {% endfor %}
+        </select>
+        <select class="selectpicker" multiple name="qualification" title="Choose qualifications..." data-width="400px" data-max-options="3">
+            {% for qualification in QUALIFICATIONS %}
+                <option value="{{qualification.0}}" {% if qualification.0 in qualifications %}selected{% endif %}>{{ qualification.1 }}</option>
+            {% endfor %}
+        </select>
+        <select class="selectpicker show-tick" name="work_type" title="Choose type..." data-width="400px">
+            {% for type in TYPES %}
+                <option value="{{type.0}}" {% if types == type.0 %}selected{% endif %}>{{ type.1 }}</option>
+            {% endfor %}
+        </select>
+        <select class="selectpicker" multiple data-live-search="true" data-live-search-placeholder="Search skills" title="Choose skills..." data-width="400px" data-max-options="15" name="skills">
+            {% for skill in SKILLS %}
+                <option value="{{skill.0}}" {% if skill.0 in skills %}selected{% endif %}>{{ skill.1 }}</option>
+            {% endfor %}
+        </select>
+        <div class="custom-control custom-checkbox mr-sm-2">
+            <input class="custom-control-input" type="checkbox" id="remote" name="remote" {% if remote == 'on' %}checked{% endif %}>
+            <label class="custom-control-label" for="remote">Remote work</label>
+        </div>
+        <div class="custom-control custom-checkbox mr-sm-2">
+            <input type="checkbox" class="custom-control-input" id="with_salary" name="with_salary" {% if with_salary == 'on' %}checked{% endif %}>
+            <label class="custom-control-label" for="with_salary">With salary</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Filter</button>
+      </form>
+    {% if page_obj %}
+        {% for vacancy in page_obj %}
+            <div style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
+                {% if vacancy.organization.organization_logo %}
+                   <img src="{{ vacancy.organization.organization_logo.url }}" alt="" style="width: 30px">
+                {% else %}
+                   <p>no image</p>
+                {% endif %}
+                <p>Title: {{ vacancy.title }}</p>
+                <p>Qualification: {{ vacancy.get_qualification_display }}</p>
+                {% if  vacancy.salary %}
+                    <p>Salary: {{ vacancy.salary }}</p>
+                {% else %}
+                    <p>Salary not displayed</p>
+                {% endif %}
+                {% if  vacancy.location %}
+                    <p>location: {{ vacancy.location }}</p>
+                {% endif %}
+                <p>Work type: {{ vacancy.get_work_type_display }}</p>
+                <p>Sphere: {{ vacancy.get_sphere_display }}</p>
+                <p>Skills: {{ vacancy.get_skills_display }}</p>
+                {% if  vacancy.remote_work %}
+                    <p>Remote work</p>
+                {% endif %}
+                <a class="btn btn-mdb-color" href="{% url 'vacancy' vacancy.url %}">View vacancy</a>
+            </div>
+        {% endfor %}
+        <div class="pagination" style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    {% if request.get_full_path == '/vacancies' %}
+                        <a href="?p=1">&laquo; first</a>
+                        <a href="?p={{ page_obj.previous_page_number }}">previous</a>
+                    {% else %}
+                        <a href="{{ request.get_full_path }}&p=1">&laquo; first</a>
+                        <a href="{{ request.get_full_path }}&p={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+
+                {% endif %}
+
+                <span class="current">
+                    | Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} |
+                </span>
+
+                {% if page_obj.has_next %}
+                    {% if request.get_full_path == '/vacancies' %}
+                        <a href="?p={{ page_obj.next_page_number }}">next</a>
+                        <a href="?p={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% else %}
+                        <a href="{{ request.get_full_path }}&p={{ page_obj.next_page_number }}">next</a>
+                        <a href="{{ request.get_full_path }}&p={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                {% endif %}
+            </span>
+        </div>
+    {% else %}
+        <p>No vacancies for display</p>
+    {% endif %}
+
 {% endblock %}

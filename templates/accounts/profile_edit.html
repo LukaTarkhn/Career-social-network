@@ -1,17 +1,22 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Edit profile{% endblock %}
+{% block style %}<link rel="stylesheet" href="{% static 'styles/bootstrap/fileinput.css' %}" />{% endblock %}
 {% block content %}
     <h1>profile edit</h1>
     {% include 'partials/_settings-links.html' %}
-    {% include 'partials/_alert.html' %}
-    {% for field in form %}
-        {% for error in field.errors %}
-            <p>{{ error }}</p>
-        {% endfor %}
-    {% endfor %}
+
     <form action="{% url 'profile_edit' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
-      <label for="profile_pic">Avatar</label>
-      <input type="file" id="profile_pic" name="profile_pic" accept="iamge/"><br><br>
+      <div class="col-sm-4 text-center">
+        <div class="kv-avatar">
+            <div class="file-loading">
+                <input type="file" id="profile_pic" name="profile_pic" accept="iamge/">
+            </div>
+        </div>
+        <div class="kv-avatar-hint">
+            <small>Select file max 2MB</small>
+        </div>
+      </div>
       <label for="first_name">First name:</label>
       <input type="text" id="first_name" name="first_name" value="{{ form.initial.first_name }}"><br><br>
       <label for="last_name">Last name:</label>
@@ -21,7 +26,7 @@
       <label for="living_city">Living city</label>
       <input type="text" id="living_city" name="living_city" {% if form.initial.living_city != none %}value="{{ form.initial.living_city }}"{% endif %}><br><br>
       <label for="birth_day">Birth day</label>
-      <input type="text" id="birth_day" name="birth_day" {% if form.initial.birth_day != none %}value="{{ form.initial.birth_day|date:"SHORT_DATE_FORMAT" }}"{% else %}value="mm/dd/yyyy"{% endif %}><br><br>
+      <input type="text" id="birth_day" name="birth_day" {% if form.initial.birth_day != none %}value="{{ form.initial.birth_day|date:"SHORT_DATE_FORMAT" }}"{% else %}value="12/24/1999"{% endif %}><br><br>
       <label for="gender">Gender</label>
       {{form.gender}}<br><br>
       <label for="about_me">About me</label>
@@ -30,10 +35,47 @@
       </textarea><br><br>
       <label for="website">Website</label>
       <input type="text" id="website" name="website"{% if form.initial.website != none %}value="{{ form.initial.website }}"{% endif %} ><br><br>
-      <input type="submit" value="Submit">
+      <input class="btn btn-mdb-color" type="submit" value="Submit">
     </form>
-<br><br>
-        {% if  user.profile_pic%}
-            <img src="{{ user.profile_pic.url }}" alt="">
-        {% endif %}
+{% endblock %}
+{% block script %}<script type="text/javascript" src="{% static 'scripts/bootstrap/fileinput.js' %}"></script>
+    {% if user.profile_pic %}
+    <script>
+        $("#profile_pic").fileinput({
+        overwriteInitial: false,
+        maxFileSize: 2000,
+        showClose: false,
+        showCaption: false,
+        browseLabel: '',
+        removeLabel: '',
+        browseIcon: 'Upload',
+        removeIcon: 'Remove',
+        removeTitle: 'Cancel or reset changes',
+        elErrorContainer: '#kv-avatar-errors-1',
+        msgErrorClass: 'alert alert-block alert-danger',
+        defaultPreviewContent: '<img src="{{user.profile_pic.url}}" alt="Avatar">',
+        layoutTemplates: {main2: '{preview} ' + ' {remove} {browse}'},
+        allowedFileExtensions: ["jpg", "png", "gif"]
+        });
+    </script>
+    {% else %}
+    <script>
+        $("#profile_pic").fileinput({
+        overwriteInitial: false,
+        maxFileSize: 2000,
+        showClose: false,
+        showCaption: false,
+        browseLabel: '',
+        removeLabel: '',
+        browseIcon: 'Upload',
+        removeIcon: 'Remove',
+        removeTitle: 'Cancel or reset changes',
+        elErrorContainer: '#kv-avatar-errors-1',
+        msgErrorClass: 'alert alert-block alert-danger',
+        defaultPreviewContent: '<img src="/static/img/avatar.jpg" alt="Avatar">',
+        layoutTemplates: {main2: '{preview} ' + ' {remove} {browse}'},
+        allowedFileExtensions: ["jpg", "png", "gif"]
+        });
+    </script>
+    {% endif %}
 {% endblock %}

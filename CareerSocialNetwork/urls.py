@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from django.conf.urls.static import  static
+from django.conf.urls.static import static
 from django.conf import settings
 urlpatterns = [
     path('', include('home.urls')),
@@ -10,6 +10,8 @@ urlpatterns = [
     path('', include('organizations.urls')),
     path('profile/', include('accounts.urls')),
     path('', include('organizations.urls')),
+    path('', include('vacancies.urls')),
+    path('', include('conversations.urls')),
     path('admin/', admin.site.urls),
 
     path('reset_password',

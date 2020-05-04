@@ -1,40 +1,94 @@
 {% extends 'base.html' %}
-{% block title %}{{ organization_profile.organization_name }}{% endblock %}
+{% block title %}{{ vacancy_info.title }}{% endblock %}
 {% block content %}
-    {% if organization_profile.organization_logo %}
-        <img src="{{ organization_profile.organization_logo.url }}" alt="">
+<div style="border: dotted 1px black">
+    {% if vacancy_info.organization.organization_logo %}
+        <img src="{{ vacancy_info.organization.organization_logo.url }}" alt="" style="width: 30px">
     {% else %}
-        <p>Here is static image</p>
+        <p>no image</p>
     {% endif %}
-<h1>
-    {{organization_profile.organization_name}}
-    {% for owner in owners %}
-        {% if organization_profile.id == owner.organization.id and owner.role == '2'%}
-            <a class="ui-button ui-widget ui-corner-all" href="{% url 'organization_edit' organization_profile.url %}">Edit</a>
+    <h1>{{vacancy_info.title}}</h1>
+    <p>Sphere: {{ vacancy_info.get_sphere_display }}</p>
+    <p>Qualification: {{ vacancy_info.get_qualification_display }}</p>
+    <p>Skills: {{ vacancy_info.get_skills_display }}</p>
+    {% if vacancy_info.salary %}
+        <p>Salary: {{ vacancy_info.salary }}</p>
+    {% else %}
+        <p>No salary displayed</p>
+    {% endif %}
+    {% if vacancy_info.location %}
+        <p>Location: {{ vacancy_info.location }}</p>
+    {% endif %}
+    <p>Work type: {{ vacancy_info.get_work_type_display }}</p>
+    {% if vacancy_info.remote_work %}
+        <p>Remote work</p>
+    {% endif %}
+    <p>Description: {{ vacancy_info.description }}</p>
+    {% if vacancy_info.bonuses %}
+        <p>Bonuses: {{ vacancy_info.bonuses }}</p>
+    {% endif %}
+    {% if vacancy_info.instructions %}
+        <p>Instructions: {{ vacancy_info.instructions }}</p>
+    {% endif %}
+</div> <br><br>
+    {% if request.user.is_authenticated %}
+        {% if responses.exists and owner %}
+            <h2>Responses</h2>
+            {% for response in responses %}
+                <div style="border: dotted 1px black">
+                    {% if vacancy_info.id == response.vacancy.id %}
+                        {% if response.user.profile_pic %}
+                            <img src="{{ response.user.profile_pic.url }}" alt="" style="width: 30px">
+                        {% else %}
+                            <p>no image</p>
+                        {% endif %}
+                        <p>Name: {{ response.user.first_name }} {{ response.user.last_name }}</p>
+                        <p>Living city: {{ response.user.living_city }}</p>
+                        <p>Gender: {{ response.user.get_gender_display }}</p>
+                        <p>Last Login: {{ response.user.last_login }}</p>
+                        {% if response.description %}
+                            <p>{{ response.description }}</p>
+                        {% endif %}
+                    {% endif %}
+                    <form action="{% url 'response_status_change' response.vacancy.url response.user.id %}" method="POST">{% csrf_token %}
+                         <select id="status" name="status">
+                             <option {% if response.status == '1' %} selected {% endif %} value="1">Submitted</option>
+                             <option {% if response.status == '2' %} selected {% endif %} value="2">Accepted</option>
+                             <option {% if response.status == '3' %} selected {% endif %} value="3">Marked</option>
+                             <option {% if response.status == '4' %} selected {% endif %} value="4">Declined</option>
+                         </select>
+
+                      <input type="submit" value="Submit">
+                    </form>
+                </div>
+            {% endfor %}
+        {% elif response %}
+            <p>Your response {{response.get_status_display}}</p>
+                <div style="border: dotted 1px black">
+                    {% if response.user.profile_pic %}
+                        <img src="{{ response.user.profile_pic.url }}" alt="" style="width: 30px">
+                    {% else %}
+                        <p>no image</p>
+                    {% endif %}
+                    <p>Name: {{ response.user.first_name }} {{ response.user.last_name }}</p>
+                    <p>Living city: {{ response.user.living_city }}</p>
+                    <p>Gender: {{ response.user.get_gender_display }}</p>
+                    <p>Last Login: {{ response.user.last_login }}</p>
+                    {% if response.description %}
+                        <p>{{ response.description }}</p>
+                    {% endif %}
+                   <a class="btn btn-mdb-color" href="{% url 'response_delete' vacancy_info.url %}" rel="modal:open">Delete</a>
+                </div>
+        {% elif not owner %}
+            <form action="" method="POST">{% csrf_token %}
+                {{ form.as_p }}
+              <input type="submit" value="Submit">
+            </form>
         {% endif %}
-    {% endfor %}
-</h1>
-    {% if organization_profile.organization_about %}
-        <p>About me: {{ organization_profile.organization_about }}</p>
-    {% endif %}
-    {% if organization_profile.organization_email %}
-        <p>Email: {{ organization_profile.organization_email }}</p>
-    {% endif %}
-    {% if organization_profile.organization_phone %}
-        <p>Phone number: {{ organization_profile.organization_phone }}</p>
-    {% endif %}
-    {% if organization_profile.number_of_employees %}
-        <p>Employers: {{organization_profile.get_number_of_employees_display}}</p>
-    {% endif %}
-    {% if organization_profile.organization_address %}
-        <p>Main office address: {{ organization_profile.organization_address }}</p>
-    {% endif %}
-    {% if organization_profile.organization_website %}
-        <p>Organization website: {{ organization_profile.organization_website }}</p>
-    {% endif %}
-    {% if organization_profile.organization_header_logo %}
-        <img src="{{ organization_profile.organization_header_logo.url }}" alt="" style="width: 500px">
     {% else %}
-        <p>Here is header image</p>
+        <p>Log in for submit your resume</p>
+        <a class="btn btn-mdb-color" href="{% url 'login' %}">Log In</a>
+        <a class="btn btn-mdb-color" href="{% url 'register' %}">Register</a>
     {% endif %}
+
 {% endblock %}

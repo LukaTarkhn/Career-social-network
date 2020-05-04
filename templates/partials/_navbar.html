@@ -1,8 +1,8 @@
 <header>
     <div>
-        <a href="{% url 'vacancies' %}">vacancies</a>
-        <a href="{% url 'members' %}">members</a>
-        <a href="{% url 'organizations' %}">organizations</a>
+        <a class="btn btn-mdb-color" href="{% url 'vacancies' %}">vacancies</a>
+        <a class="btn btn-mdb-color" href="{% url 'members' %}">members</a>
+        <a class="btn btn-mdb-color" href="{% url 'organizations' %}">organizations</a>
     </div>
     <br>
     {% if user.is_authenticated %}
@@ -14,11 +14,15 @@
                 |Img None|
             {% endif %}
             |
-            <a href="{% url 'profile' user.username %}">My profile</a>
-            | <a href="javascript:{document.getElementById('logout').submit()}">Logout</a>
+            <a class="btn btn-mdb-color" href="{% url 'profile' user.username %}">My profile</a>
+            <a class="btn btn-mdb-color" href="{% url 'conversations'%}">Conversations</a>
+            <a class="btn btn-mdb-color" href="{% url 'profile_edit'%}">Edit profile</a>
+            <a class="btn btn-mdb-color" href="{% url 'user_responses'%}">Responses</a>
+            | <a class="btn btn-mdb-color" href="javascript:{document.getElementById('logout').submit()}">Logout</a>
             <div>
-                <a href="{% url 'user_organizations' %}">My organizations</a><br>
-                <a href="{% url 'organization_add' %}">Add organization</a>
+                <a class="btn btn-mdb-color" href="{% url 'vacancy_add_modal' %}" rel="modal:open">Add vacancy</a><br>
+                <a class="btn btn-mdb-color" href="{% url 'user_organizations' %}">My organizations</a><br>
+                <a class="btn btn-mdb-color" href="{% url 'organization_add' %}" rel="modal:open">Add organization</a>
             </div>
         </div>
         <form action="{% url 'logout' %}" method="POST" id="logout">
@@ -26,7 +30,7 @@
             <input type="hidden">
         </form>
     {% else %}
-        <a href="{% url 'login' %}">Log In</a>
-        <a href="{% url 'register' %}">Register</a>
+        <a class="btn btn-mdb-color" href="{% url 'login' %}">Log In</a>
+        <a class="btn btn-mdb-color" href="{% url 'register' %}">Register</a>
     {% endif %}
 </header>

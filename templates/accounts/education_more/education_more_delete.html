@@ -1,7 +1,7 @@
 <p>
-   Are you sure you want to delete experience in: <b>{{ experience_info.name }}</b> <br>
+   Are you sure you want to delete experience in: <b>{{ more_education_info.name }}</b> <br>
 </p><br>
 
-<form action="{% url 'experience_delete' experience_info.id %}" method="POST">{% csrf_token %}
+<form action="{% url 'more_education_delete' more_education_info.id %}" method="POST">{% csrf_token %}
   <input class="btn btn-red" type="submit" value="Confirm delete">
 </form>

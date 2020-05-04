@@ -1380,7 +1380,7 @@
                 tText, tOffice, tGdocs, tVideo, tAudio, tFlash, tObject, tPdf, tOther, tStyle, tZoomCache, vDefaultDim,
                 tStats;
             tMain1 = '{preview}\n' +
-                '<div class="kv-upload-progress kv-hidden"></div><div class="clearfix"></div>\n' +
+                '<div class="kv-upload-progress kv-hidden"></div>\n' +
                 '<div class="input-group {class}">\n' +
                 '  {caption}\n' +
                 '<div class="input-group-btn input-group-append">\n' +
@@ -1391,7 +1391,7 @@
                 '      {browse}\n' +
                 '    </div>\n' +
                 '</div>';
-            tMain2 = '{preview}\n<div class="kv-upload-progress kv-hidden"></div>\n<div class="clearfix"></div>\n' +
+            tMain2 = '{preview}\n<div class="kv-upload-progress kv-hidden"></div>\n' +
                 '{remove}\n{cancel}\n{upload}\n{browse}\n';
             tPreview = '<div class="file-preview {class}">\n' +
                 '  {close}' +
@@ -1447,7 +1447,6 @@
                 '        <div class="file-caption-info">{caption}</div>\n' +
                 '        <div class="file-size-info">{size}</div>\n' +
                 '    </div>\n' +
-                '    {progress}\n{indicator}\n{actions}\n' +
                 '</div>';
             tActions = '<div class="file-actions">\n' +
                 '    <div class="file-footer-buttons">\n' +
@@ -1634,7 +1633,7 @@
                     showRemove: true,
                     showUpload: true,
                     showDownload: true,
-                    showZoom: true,
+                    showZoom: false,
                     showDrag: true,
                     removeIcon: '<i class="glyphicon glyphicon-trash"></i>',
                     removeClass: 'btn btn-sm btn-kv btn-default btn-outline-secondary',
@@ -5742,3 +5741,5 @@
         }
     });
 }));
+
+

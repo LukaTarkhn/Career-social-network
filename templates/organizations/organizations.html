@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Specialists{% endblock %}
+{% block title %}Organizations{% endblock %}
 {% block content %}
     <h1>Organizations list</h1>
     {% if page_obj %}
@@ -18,7 +18,7 @@
                 {% if  organization_profile.organization_email%}
                     <p>Email: {{ organization_profile.organization_email }}</p>
                 {% endif %}
-                <a href="{% url 'organization' organization_profile.url %}">View organization</a>
+                <a class="btn btn-mdb-color" href="{% url 'organization' organization_profile.url %}">View organization</a>
             </div>
         {% endfor %}
         <div class="pagination" style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
@@ -39,7 +39,7 @@
             </span>
         </div>
     {% else %}
-        <p>No resumes for display</p>
+        <p>No organizations for display</p>
     {% endif %}
 
 {% endblock %}

@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages, auth
 from django.contrib.auth import get_user_model, authenticate
+from django.core.paginator import Paginator
 
-from accounts.models import Account
-from .forms import PersonalEditForm, EmailUrlEditForm
+from accounts.models import Account, Specialization, Contact, WorkExperience, Education, Language, MoreEducation
+from .forms import PersonalEditForm, EmailUrlEditForm, SpecializationEditForm, SpecializationAddForm, ContactAddForm, \
+    ContactEditForm, WorkExperienceAddForm, WorkExperienceEditForm, EducationAddForm, EducationEditForm, \
+    MoreEducationAddForm, MoreEducationEditForm, LanguageAddForm, LanguageEditForm
 import secrets
 import time
 from datetime import date
@@ -42,6 +45,16 @@ def register(request):
                     # auth.login(request, user)
                     # messages.success(request, 'You are now registered and authorized')
                     user.save()
+                    # add specialization section
+                    specialization = SpecializationAddForm(request.POST or None)
+                    contact = ContactAddForm(request.POST or None)
+                    obj1 = specialization.save(commit=False)
+                    obj1.user = Account.objects.get(email=email)
+                    obj1.save()
+                    obj2 = contact.save(commit=False)
+                    obj2.user = Account.objects.get(email=email)
+                    obj2.save()
+                    # end specialization adding
                     messages.success(request, 'You are now registered and can log in')
                     return redirect('login')
         else:
@@ -104,6 +117,9 @@ def profile_edit(request):
                 messages.success(request, 'Personal information updated')
                 return redirect('profile_edit')
         context = {'form': form}
+        for field in form:
+            for error in field.errors:
+                messages.error(request, error)
         return render(request, 'accounts/profile_edit.html', context)
     else:
         messages.error(request, 'How about register first?')
@@ -151,7 +167,7 @@ def change_email_url(request):
                     'username': request.POST['username']
                 }
                 form.save()
-                context['success_message'] = 'Email and url updated'
+                messages.success(request, 'Email and url updated')
         else:
             form = EmailUrlEditForm(
                 initial={
@@ -159,9 +175,340 @@ def change_email_url(request):
                     'username': request.user.username,
                 }
             )
+        for field in form:
+            for error in field.errors:
+                messages.error(request, error)
         context['account_form'] = form
         return render(request, 'accounts/change_password.html', context)
     else:
         messages.error(request, 'How about register first?')
         return redirect('register')
 
+
+def specialization_edit(request):
+    if request.user.is_authenticated:
+        owner = get_object_or_404(Specialization, user=request.user)
+        form = SpecializationEditForm(request.POST or None, instance=owner)
+        if request.method == 'POST':
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Specialization information updated')
+                return redirect('specialization_edit')
+        context = {
+            'form': form
+        }
+        return render(request, 'accounts/specialization_edit.html', context)
+    else:
+        messages.error(request, 'How about register first?')
+        return redirect('register')
+
+
+def contact_edit(request):
+    if request.user.is_authenticated:
+        owner = get_object_or_404(Contact, user=request.user)
+        form = ContactEditForm(request.POST or None, instance=owner)
+        if request.method == 'POST':
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Contact information updated')
+                return redirect('contact_edit')
+        context = {
+            'form': form
+        }
+        return render(request, 'accounts/contact_edit.html', context)
+    else:
+        messages.error(request, 'How about register first?')
+        return redirect('register')
+
+
+def experience(request):
+    if request.user.is_authenticated:
+        user_experience = WorkExperience.objects.filter(user=request.user).order_by('-date_created')
+
+        paginator = Paginator(user_experience, 5)
+
+        page_number = request.GET.get('p')
+        page_obj = paginator.get_page(page_number)
+        return render(request, 'accounts/experience/user_experience.html', {'page_obj': page_obj})
+    else:
+        messages.error(request, 'How about register first?')
+        return redirect('register')
+
+
+def education(request):
+    if request.user.is_authenticated:
+        user_educations = Education.objects.filter(user=request.user).order_by('-date_created')
+        user_languages = Language.objects.filter(user=request.user).order_by('-date_created')
+        user_more_educations = MoreEducation.objects.filter(user=request.user).order_by('-date_created')
+
+        educationP = Paginator(user_educations, 5)
+        more_educationP = Paginator(user_more_educations, 5)
+        languageP = Paginator(user_languages, 5)
+
+        page_number = request.GET.get('p')
+        educations = educationP.get_page(page_number)
+        languages = languageP.get_page(page_number)
+        more_educations = more_educationP.get_page(page_number)
+
+        context = {
+            'educations': educations,
+            'languages': languages,
+            'more_educations': more_educations
+        }
+        return render(request, 'accounts/education/user_education.html', context)
+    else:
+        messages.error(request, 'How about register first?')
+        return redirect('register')
+
+
+def experience_add(request):
+    if request.user.is_authenticated:
+        form = WorkExperienceAddForm(request.POST or None)
+        if request.method == 'POST':
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.user = request.user
+                obj.save()
+                messages.success(request, 'Work experience added')
+                return redirect('experience')
+        context = {
+            'form': form
+        }
+        for field in form:
+            for error in field.errors:
+                messages.error(request, error)
+        return render(request, 'accounts/experience/experience_add.html', context)
+    else:
+        messages.error(request, 'How about register first?')
+        return redirect('register')
+
+
+def experience_edit(request, pk):
+    if request.user.is_authenticated:
+        experience_info = get_object_or_404(WorkExperience, pk=pk)
+        if experience_info.user == request.user:
+            form = WorkExperienceEditForm(request.POST or None, instance=experience_info)
+            if request.method == 'POST':
+                if form.is_valid():
+                    obj = form.save(commit=False)
+                    obj.save()
+                    messages.success(request, 'Experience information updated')
+                    return redirect('experience')
+            context = {'form': form}
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, error)
+            return render(request, 'accounts/experience/experience_edit.html', context)
+        else:
+            messages.success(request, 'This is not your account')
+            return redirect('profile')
+    else:
+        messages.error(request, 'How about register first?')
+        return redirect('register')
+
+
+def experience_delete(request, pk):
+    if request.user.is_authenticated:
+        experience_info = get_object_or_404(WorkExperience, pk=pk)
+        if experience_info.user == request.user:
+            if request.method == 'POST':
+                experience_info.delete()
+                messages.success(request, 'Successfully deleted')
+                return redirect('experience')
+            context = {'experience_info': experience_info}
+            return render(request, 'accounts/experience/experience_delete.html', context)
+        else:
+            messages.success(request, 'This is not your account')
+            return redirect('profile')
+    else:
+        messages.error(request, 'How about register first?')
+        return redirect('register')
+
+
+def education_add(request):
+    if request.user.is_authenticated:
+        form = EducationAddForm(request.POST or None)
+        if request.method == 'POST':
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.user = request.user
+                obj.save()
+                messages.success(request, 'Education added')
+                return redirect('education')
+        context = {
+            'form': form
+        }
+        return render(request, 'accounts/education/education_add.html', context)
+    else:
+        messages.error(request, 'How about register first?')
+        return redirect('register')
+
+
+def education_edit(request, pk):
+    if request.user.is_authenticated:
+        education_info = get_object_or_404(Education, pk=pk)
+        if education_info.user == request.user:
+            form = EducationEditForm(request.POST or None, instance=education_info)
+            if request.method == 'POST':
+                if form.is_valid():
+                    obj = form.save(commit=False)
+                    obj.save()
+                    messages.success(request, 'Education information updated')
+                    return redirect('education')
+            context = {'form': form}
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, error)
+            return render(request, 'accounts/education/education_edit.html', context)
+        else:
+            messages.success(request, 'This is not your account')
+            return redirect('profile')
+    else:
+        messages.error(request, 'How about register first?')
+        return redirect('register')
+
+
+def education_delete(request, pk):
+    if request.user.is_authenticated:
+        education_info = get_object_or_404(Education, pk=pk)
+        if education_info.user == request.user:
+            if request.method == 'POST':
+                education_info.delete()
+                messages.success(request, 'Successfully deleted')
+                return redirect('education')
+            context = {'education_info': education_info}
+            return render(request, 'accounts/education/education_delete.html', context)
+        else:
+            messages.success(request, 'This is not your account')
+            return redirect('profile')
+    else:
+        messages.error(request, 'How about register first?')
+        return redirect('register')
+
+
+def more_education_add(request):
+    if request.user.is_authenticated:
+        form = MoreEducationAddForm(request.POST or None)
+        if request.method == 'POST':
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.user = request.user
+                obj.save()
+                messages.success(request, 'Education added')
+                return redirect('education')
+        context = {
+            'form': form
+        }
+        for field in form:
+            for error in field.errors:
+                messages.error(request, error)
+        return render(request, 'accounts/education_more/education_more_add.html', context)
+    else:
+        messages.error(request, 'How about register first?')
+        return redirect('register')
+
+
+def more_education_edit(request, pk):
+    if request.user.is_authenticated:
+        more_education_info = get_object_or_404(MoreEducation, pk=pk)
+        if more_education_info.user == request.user:
+            form = MoreEducationEditForm(request.POST or None, instance=more_education_info)
+            if request.method == 'POST':
+                if form.is_valid():
+                    obj = form.save(commit=False)
+                    obj.save()
+                    messages.success(request, 'Education information updated')
+                    return redirect('education')
+            context = {'form': form}
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, error)
+            return render(request, 'accounts/education_more/education_more_edit.html', context)
+        else:
+            messages.success(request, 'This is not your account')
+            return redirect('profile')
+    else:
+        messages.error(request, 'How about register first?')
+        return redirect('register')
+
+
+def more_education_delete(request, pk):
+    if request.user.is_authenticated:
+        more_education_info = get_object_or_404(MoreEducation, pk=pk)
+        if more_education_info.user == request.user:
+            if request.method == 'POST':
+                more_education_info.delete()
+                messages.success(request, 'Successfully deleted')
+                return redirect('education')
+            context = {'more_education_info': more_education_info}
+            return render(request, 'accounts/education_more/education_more_delete.html', context)
+        else:
+            messages.success(request, 'This is not your account')
+            return redirect('profile')
+    else:
+        messages.error(request, 'How about register first?')
+        return redirect('register')
+
+
+def language_add(request):
+    if request.user.is_authenticated:
+        form = LanguageAddForm(request.POST or None)
+        if request.method == 'POST':
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.user = request.user
+                obj.save()
+                messages.success(request, 'Language added')
+                return redirect('education')
+        context = {
+            'form': form
+        }
+        for field in form:
+            for error in field.errors:
+                messages.error(request, error)
+        return render(request, 'accounts/language/language_add.html', context)
+    else:
+        messages.error(request, 'How about register first?')
+        return redirect('register')
+
+
+def language_edit(request, pk):
+    if request.user.is_authenticated:
+        language_info = get_object_or_404(Language, pk=pk)
+        if language_info.user == request.user:
+            form = LanguageEditForm(request.POST or None, instance=language_info)
+            if request.method == 'POST':
+                if form.is_valid():
+                    obj = form.save(commit=False)
+                    obj.save()
+                    messages.success(request, 'Language information updated')
+                    return redirect('education')
+            context = {'form': form}
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, error)
+            return render(request, 'accounts/language/language_edit.html', context)
+        else:
+            messages.success(request, 'This is not your account')
+            return redirect('profile')
+    else:
+        messages.error(request, 'How about register first?')
+        return redirect('register')
+
+
+def language_delete(request, pk):
+    if request.user.is_authenticated:
+        language_info = get_object_or_404(Language, pk=pk)
+        if language_info.user == request.user:
+            if request.method == 'POST':
+                language_info.delete()
+                messages.success(request, 'Successfully deleted')
+                return redirect('education')
+            context = {'language_info': language_info}
+            return render(request, 'accounts/language/language_delete.html', context)
+        else:
+            messages.success(request, 'This is not your account')
+            return redirect('profile')
+    else:
+        messages.error(request, 'How about register first?')
+        return redirect('register')

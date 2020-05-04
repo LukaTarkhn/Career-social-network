@@ -1,52 +1,40 @@
-{% extends 'base.html' %}
-{% block title %}Vacancies{% endblock %}
-{% block content %}
-    <h1>Vacancies list</h1>
-    {% if page_obj %}
-        {% for vacancy in page_obj %}
-            <div style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
-                {% if vacancy.organization.organization_logo %}
-                   <img src="{{ vacancy.organization.organization_logo.url }}" alt="" style="width: 30px">
-                {% else %}
-                   <p>no image</p>
-                {% endif %}
-                <p>Title: {{ vacancy.title }}</p>
-                <p>Qualification: {{ vacancy.get_qualification_display }}</p>
-                {% if  vacancy.salary %}
-                    <p>Salary: {{ vacancy.salary }}</p>
-                {% else %}
-                    <p>Salary not displayed</p>
-                {% endif %}
-                {% if  vacancy.location %}
-                    <p>location: {{ vacancy.location }}</p>
-                {% endif %}
-                <p>Work type: {{ vacancy.get_work_type_display }}</p>
-                <p>sphere: {{ vacancy.get_sphere_display }}</p>
-                {% if  vacancy.remote_work %}
-                    <p>Remote work</p>
-                {% endif %}
-                <a class="ui-button ui-widget ui-corner-all" href="{% url 'vacancy' vacancy.url %}">View vacancy</a>
-            </div>
+{% if page_obj %}
+    {% for organization in page_obj %}
+        {% for owner in owners %}
+            {% if owner.organization.id == organization.id %}
+                <a class="btn btn-mdb-color" href="{% url 'organization' organization.url %}/vacancies/add">
+                    <div style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
+                        {% if organization.organization_logo %}
+                             <img src="{{ organization.organization_logo.url }}" alt="" style="width: 80px; height: 80px">
+                        {% else %}
+                                <p>no img</p>
+                        {% endif %}
+                        <p>{{ owner.get_role_display }}</p>
+                        <p>Organization: {{ organization.organization_name }}</p>
+                        <p>Website: {{ organization.organization_website }}</p>
+                    </div>
+                </a>
+            {% endif %}
         {% endfor %}
-        <div class="pagination" style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
-            <span class="step-links">
-                {% if page_obj.has_previous %}
-                    <a href="?p=1">&laquo; first</a>
-                    <a href="?p={{ page_obj.previous_page_number }}">previous</a>
-                {% endif %}
+    {% endfor %}
+    <div class="pagination" style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?p=1">&laquo; first</a>
+                <a href="?p={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
 
-                <span class="current">
-                    | Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} |
-                </span>
-
-                {% if page_obj.has_next %}
-                    <a href="?p={{ page_obj.next_page_number }}">next</a>
-                    <a href="?p={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                {% endif %}
+            <span class="current">
+                | Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} |
             </span>
-        </div>
-    {% else %}
-        <p>No vacancies for display</p>
-    {% endif %}
 
-{% endblock %}
+            {% if page_obj.has_next %}
+                <a href="?p={{ page_obj.next_page_number }}">next</a>
+                <a href="?p={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+{% else %}
+    <p>You have not created organizations</p>
+    <a class="btn btn-mdb-color" href="{% url 'organization_add' %}" rel="modal:open">Add organization</a>
+{% endif %}

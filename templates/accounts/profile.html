@@ -9,7 +9,12 @@
 <h1>
     {{user_profile.first_name}} {{ user_profile.last_name }}
     {% if user_profile.username == user.username %}
-        <a href="{% url 'profile_edit' %}">Edit</a>
+        <a class="btn btn-mdb-color" href="{% url 'profile_edit' %}">Edit</a>
+    {% else %}
+        <a class="btn btn-mdb-color" href="javascript:{document.getElementById('conversation').submit()}">Message</a>
+        <form action="{% url 'user_conversation' user_profile.username%}" method="POST" id="conversation">{% csrf_token %}
+            <input type="hidden">
+        </form>
     {% endif %}
 </h1>
     <p>Email: {{ user_profile.email }}</p>

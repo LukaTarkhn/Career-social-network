@@ -1,9 +1,8 @@
-   <p>
-       Are you sure you want to delete organization <b>{{ organization_for_delete.organization_name }}</b> <br>
-      <i>if you delete this organization, you also delete all vacancies from this organization</i>
-   </p><br>
+<p>
+   Are you sure you want to delete organization <b>{{ organization_for_delete.organization_name }}</b> <br>
+  <small><i>if you delete this organization, you also delete all vacancies from this organization</i></small>
+</p><br>
 
 <form action="{% url 'organization_delete' organization_for_delete.url %}" method="POST">{% csrf_token %}
-  <a href="{% url 'organization' organization_for_delete.url %}">Cancel</a>
-  <input type="submit" value="Confirm delete">
+  <input class="btn btn-mdb-color" type="submit" value="Confirm delete">
 </form>

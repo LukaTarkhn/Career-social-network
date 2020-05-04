@@ -1,39 +1,13 @@
 {% extends 'base.html' %}
-{% block title %}Edit profile{% endblock %}
+{% block title %}Edit specialization{% endblock %}
 {% block content %}
-    <h1>profile edit</h1>
+    <h1>Specialization edit</h1>
     {% include 'partials/_settings-links.html' %}
-    {% include 'partials/_alert.html' %}
-    {% for field in form %}
-        {% for error in field.errors %}
-            <p>{{ error }}</p>
-        {% endfor %}
-    {% endfor %}
-    <form action="{% url 'profile_edit' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
-      <label for="profile_pic">Avatar</label>
-      <input type="file" id="profile_pic" name="profile_pic" accept="iamge/"><br><br>
-      <label for="first_name">First name:</label>
-      <input type="text" id="first_name" name="first_name" value="{{ form.initial.first_name }}"><br><br>
-      <label for="last_name">Last name:</label>
-      <input type="text" id="last_name" name="last_name" value="{{ form.initial.last_name }}"><br><br>
-      <label for="phone">Phone number:</label>
-      <input type="text" id="phone" name="phone" {% if form.initial.phone != none %}value="{{ form.initial.phone }}"{% endif %}><br><br>
-      <label for="living_city">Living city</label>
-      <input type="text" id="living_city" name="living_city" {% if form.initial.living_city != none %}value="{{ form.initial.living_city }}"{% endif %}><br><br>
-      <label for="birth_day">Birth day</label>
-      <input type="text" id="birth_day" name="birth_day" {% if form.initial.birth_day != none %}value="{{ form.initial.birth_day|date:"SHORT_DATE_FORMAT" }}"{% else %}value="mm/dd/yyyy"{% endif %}><br><br>
-      <label for="gender">Gender</label>
-      {{form.gender}}<br><br>
-      <label for="about_me">About me</label>
-      <textarea name="about_me" id="about_me" cols="30" rows="10" maxlength="250">
-          {% if form.initial.about_me != none %}{{ form.initial.about_me }}{% endif %}
-      </textarea><br><br>
-      <label for="website">Website</label>
-      <input type="text" id="website" name="website"{% if form.initial.website != none %}value="{{ form.initial.website }}"{% endif %} ><br><br>
-      <input class="ui-button ui-widget ui-corner-all" type="submit" value="Submit">
+    
+
+    <form action="" method="POST">{% csrf_token %}
+        {{ form.as_p }}
+      <input class="btn btn-mdb-color" type="submit" value="Submit">
     </form>
 <br><br>
-        {% if  user.profile_pic%}
-            <img src="{{ user.profile_pic.url }}" alt="">
-        {% endif %}
 {% endblock %}

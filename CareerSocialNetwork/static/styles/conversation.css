@@ -5,7 +5,6 @@
 .app {
   position: relative;
   overflow: hidden;
-  top: 19px;
   height: calc(100% - 38px);
   margin: auto;
   padding: 0;
@@ -75,7 +74,6 @@
   display: block;
 }
 .heading-online {
-  display: none;
   padding: 0 5px;
   font-size: 12px;
   color: #93918f;
@@ -277,17 +275,17 @@
 .message {
   padding: 0 !important;
   margin: 0 !important;
-  background: url("w.jpg") no-repeat fixed center;
   background-size: cover;
   overflow-y: auto;
   border: 1px solid #f7f7f7;
   height: calc(100% - 120px);
 }
 .message-previous {
-  margin : 0 !important;
-  padding: 0 !important;
+  margin :0 0 10px 0 !important;
   height: auto;
   width: 100%;
+  background: rgba(12, 84, 96, 0.52);
+  color: white;
 }
 .previous {
   font-size: 15px;
@@ -304,12 +302,12 @@
 .message-body {
   margin: 0 !important;
   padding: 0 !important;
-  width: auto;
+  width: 100%;
   height: auto;
 }
 
 .message-main-receiver {
-  /*padding: 10px 20px;*/
+  padding: 4px 20px !important;
   max-width: 60%;
 }
 
@@ -463,12 +461,7 @@
     color: #fff;
     cursor: pointer;
   }
-  .sideBar {
-    height: calc(100% - 130px);
-  }
-  .sideBar-body {
-    height: 80px;
-  }
+
   .sideBar-avatar {
     text-align: left;
     padding: 0 8px !important;

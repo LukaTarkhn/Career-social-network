@@ -25,7 +25,9 @@
                 {% if  vacancy.remote_work %}
                     <p>Remote work</p>
                 {% endif %}
-                <a class="ui-button ui-widget ui-corner-all" href="{% url 'vacancy' vacancy.url %}">View vacancy</a>
+                <a class="btn btn-mdb-color" href="{% url 'vacancy' vacancy.url %}">View vacancy</a>
+                <a class="btn btn-mdb-color" href="{% url 'vacancy_edit' vacancy.url %}">Edit</a>
+{#              <a class="btn btn-mdb-color" href="{% url 'vacancy_delete' vacancy.url %}" rel="modal:open">Delete</a>#}
             </div>
         {% endfor %}
         <div class="pagination" style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">

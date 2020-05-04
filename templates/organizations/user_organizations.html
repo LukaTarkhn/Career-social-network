@@ -4,24 +4,36 @@
     <h1>My organizations</h1>
     {% if page_obj %}
         {% for organization in page_obj %}
-            <div style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
-                {% if organization.organization_logo %}
-                     <img src="{{ organization.organization_logo.url }}" alt="" style="width: 80px; height: 80px">
-                {% else %}
-                        <p>no img</p>
+            {% for owner in owners %}
+                {% if owner.organization.id == organization.id %}
+                    <div style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
+
+                        {% if organization.organization_logo %}
+                             <img src="{{ organization.organization_logo.url }}" alt="" style="width: 80px; height: 80px">
+                        {% else %}
+                                <p>no img</p>
+                        {% endif %}
+
+                        <p>{{ owner.get_role_display }}</p>
+                        <p>Organization: {{ organization.organization_name }}</p>
+                        <p>Website: {{ organization.organization_website }}</p>
+                        {% if  organization.organization_phone%}
+                            <p>Phone: {{ organization.organization_phone }}</p>
+                        {% endif %}
+                        {% if  organization.organization_email%}
+                            <p>Email: {{ organization.organization_email }}</p>
+                        {% endif %}
+                        <a class="btn btn-mdb-color" href="{% url 'vacancies_add' organization.url %}">Add vacancy</a>
+                        <a class="btn btn-mdb-color" href="{% url 'organization' organization.url %}">View</a>
+                        <a class="btn btn-mdb-color" href="{% url 'vacancies_by_organization' organization.url %}">Vacancies</a>
+                        {% if owner.role == '2' %}
+                             <a class="btn btn-mdb-color" href="{% url 'organization_admin' organization.url %}">Manage admins</a>
+                             <a class="btn btn-mdb-color" href="{% url 'organization_edit' organization.url %}">Edit</a>
+                             <a class="btn btn-mdb-color" href="{% url 'organization_delete' organization.url %}" rel="modal:open">Delete</a>
+                        {% endif %}
+                    </div>
                 {% endif %}
-                <p>Organization: {{ organization.organization_name }}</p>
-                <p>Website: {{ organization.organization_website }}</p>
-                {% if  organization.organization_phone%}
-                    <p>Phone: {{ organization.organization_phone }}</p>
-                {% endif %}
-                {% if  organization.organization_email%}
-                    <p>Email: {{ organization.organization_email }}</p>
-                {% endif %}
-                <a href="{% url 'organization' organization.url %}">View</a>
-                <a href="{% url 'organization_edit' organization.url %}">Edit</a>
-                <a href="{% url 'organization_delete' organization.url %}">delete</a>
-            </div>
+            {% endfor %}
         {% endfor %}
         <div class="pagination" style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
             <span class="step-links">
@@ -42,6 +54,7 @@
         </div>
     {% else %}
         <p>You have not created organizations</p>
+        <a class="btn btn-mdb-color" href="{% url 'organization_add' %}" rel="modal:open">Add organization</a>
     {% endif %}
 
 {% endblock %}

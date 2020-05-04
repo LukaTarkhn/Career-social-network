@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,13 +7,25 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ITWORK - {% block title %}{% endblock %}</title>
+    {# styles #}
+    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/bootstrap/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/bootstrap/mdb.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/bootstrap/bootstrap-select.css' %}" />
+    {% block style %}{% endblock %}
 </head>
 <body>
-{% include 'partials/_navbar.html' %}
-
+    {% include 'partials/_alert.html' %}
+    {% include 'partials/_navbar.html' %}
     {% block content %}
     {% endblock %}
+    {% include 'partials/_footer.html' %}
 
-{% include 'partials/_footer.html' %}
+    <script type="text/javascript" src="{% static 'scripts/jquery-3.5.0.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'scripts/bootstrap/bootstrap.bundle.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'scripts/bootstrap/bootstrap-select.js' %}"></script>
+    <script type="text/javascript" src="{% static 'scripts/jquery.modal.min.js' %}"></script>
+    {% block script %}{% endblock %}
+    <script type="text/javascript" src="{% static 'scripts/scripts.js' %}"></script>
 </body>
 </html>

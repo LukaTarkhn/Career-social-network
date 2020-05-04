@@ -1,13 +1,13 @@
 from django.contrib import admin
-from organizations.models import Organization
+from organizations.models import Organization, OrganizationOwner
 
 
-class OrganizationsAdmin(admin.ModelAdmin):
-    list_display = ('user', 'url', 'organization_name', 'organization_phone', 'organization_email',
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display = ('organization_name', 'url', 'organization_phone', 'organization_email',
                     'organization_website', 'organization_website', 'organization_address', 'number_of_employees',
                     'date_created')
-    list_display_links = ('user', 'url', 'organization_name')
-    search_fields = ('user', 'organization_name', 'organization_email')
+    list_display_links = ('organization_name', 'url')
+    search_fields = ('organization_name', 'organization_email')
     ordering = ('date_created',)
     readonly_fields = ()
     filter_horizontal = ()
@@ -15,4 +15,18 @@ class OrganizationsAdmin(admin.ModelAdmin):
     fieldsets = ()
 
 
-admin.site.register(Organization, OrganizationsAdmin)
+admin.site.register(Organization, OrganizationAdmin)
+
+
+class OrganizationOwnerAdmin(admin.ModelAdmin):
+    list_display = ('user', 'organization', 'role', 'date_created')
+    list_display_links = ('user', 'organization')
+    search_fields = ('user', 'organization', 'role')
+    ordering = ('date_created',)
+    readonly_fields = ()
+    filter_horizontal = ()
+    list_filter = ()
+    fieldsets = ()
+
+
+admin.site.register(OrganizationOwner, OrganizationOwnerAdmin)

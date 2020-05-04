@@ -1,16 +1,29 @@
 {% if messages %}
+    <div style="position: fixed; top: 0; right: 0; z-index: 999">
     {% for message in messages %}
-        <div class="message">
-            <div class="alert alert-danger">
-                <strong>
-                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-                        Error:
-                    {% else %}
-                        {{ message.tags|title }}:
-                    {% endif %}
-                </strong>
-                {{ message }}
-            </div>
-        </div>
+        <div class="toast fade show" id="successMessage" data-autohide="true">
+            <div class="toast-header">
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                  <svg class="rounded mr-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img">
+                    <rect fill="#e93f4e" width="100%" height="100%"></rect>
+                  </svg>
+                    <strong class="mr-auto">Error</strong>
+                    </div>
+                    <div class="toast-body">
+                      <span style="color: #e93f4e">{{ message }}</span>
+                    </div>
+                  </div>
+                {% else %}
+                  <svg class="rounded mr-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img">
+                    <rect fill="#32ef5f" width="100%" height="100%"></rect>
+                  </svg>
+                    <strong class="mr-auto">{{ message.tags|title }}</strong>
+                    </div>
+                    <div class="toast-body">
+                      <span style="color: #32ef5f">{{ message }}</span>
+                    </div>
+                  </div>
+                {% endif %}
     {% endfor %}
+    </div>
 {% endif %}

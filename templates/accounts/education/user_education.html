@@ -3,7 +3,7 @@
 {% block content %}
     <h1>Education</h1>
     {% include 'partials/_settings-links.html' %}
-    <a class="btn btn-deep-purple" href="#">Add education</a>
+    <a class="btn btn-deep-purple" href="{% url 'education_add' %}">Add education</a>
     {% if educations %}
         {% for education in educations %}
                 <div style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
@@ -23,8 +23,8 @@
                     {% if education.specialization %}
                         <p>Specialization: {{ education.specialization }}</p>
                     {% endif %}
-                    <a class="btn btn-mdb-color" href="#">Edit</a>
-                    <a class="btn btn-red" href="#">Delete</a>
+                    <a class="btn btn-mdb-color" href="{% url 'education_edit' education.id %}">Edit</a>
+                    <a class="btn btn-red" href="{% url 'education_delete' education.id %}" rel="modal:open">Delete</a>
                 </div>
         {% endfor %}
         <div class="pagination" style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
@@ -48,7 +48,7 @@
         <p>No educations for display</p>
     {% endif %}
     <h2>More education</h2>
-    <a class="btn btn-deep-purple" href="#">Add more education</a>
+    <a class="btn btn-deep-purple" href="{% url 'more_education_add' %}">Add more education</a>
     {% if more_educations %}
         {% for education in more_educations %}
                 <div style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
@@ -65,8 +65,8 @@
                     {% if education.about_course %}
                         <p>About course: {{ education.about_course }}</p>
                     {% endif %}
-                    <a class="btn btn-mdb-color" href="#">Edit</a>
-                    <a class="btn btn-red" href="#">Delete</a>
+                    <a class="btn btn-mdb-color" href="{% url 'more_education_edit' education.id %}">Edit</a>
+                    <a class="btn btn-red" href="{% url 'more_education_delete' education.id %}" rel="modal:open">Delete</a>
                 </div>
         {% endfor %}
         <div class="pagination" style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
@@ -90,14 +90,14 @@
         <p>No educations for display</p>
     {% endif %}
     <h2>Languages</h2>
-    <a class="btn btn-deep-purple" href="#">Add language</a>
+    <a class="btn btn-deep-purple" href="{% url 'language_add' %}">Add language</a>
     {% if languages %}
         {% for language in languages %}
                 <div style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">
                     <p>Language: {{ language.get_language_display }}</p>
                     <p>Level: {{ language.get_level_display }}</p>
-                    <a class="btn btn-mdb-color" href="#">Edit</a>
-                    <a class="btn btn-red" href="#">Delete</a>
+                    <a class="btn btn-mdb-color" href="{% url 'language_edit' language.id %}">Edit</a>
+                    <a class="btn btn-red" href="{% url 'language_delete' language.id %}" rel="modal:open">Delete</a>
                 </div>
         {% endfor %}
         <div class="pagination" style="border: 1px solid black; width: 250px; margin-bottom: 5px; padding: 10px">

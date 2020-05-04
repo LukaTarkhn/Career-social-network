@@ -8,16 +8,16 @@
     <title>Sign-up</title>
 </head>
 <body>
-    {% include 'partials/_alert.html' %}
+    
     <form action="{% url 'register' %}" method="POST">{% csrf_token %}
         <input type="text" name="first_name" required placeholder="First name"> <br>
         <input type="text" name="last_name" required placeholder="Last name"> <br>
         <input type="email" name="email"  required placeholder="Email"> <br>
         <input type="password" name="password" required placeholder="Password"> <br>
         <input type="password" name="re_password" required placeholder="Confirm password"> <br>
-        <input type="submit" value="Register"> <br>
+        <input class="btn btn-mdb-color" type="submit" value="Register"> <br>
     </form>
 
-    <a href="{% url 'home' %}">Home</a>
+    <a class="btn btn-mdb-color" href="{% url 'home' %}">Home</a>
 </body>
 </html>

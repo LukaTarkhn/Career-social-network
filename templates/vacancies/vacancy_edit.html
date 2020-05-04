@@ -2,46 +2,14 @@
 {% block title %}Edit organization{% endblock %}
 {% block content %}
     <h1>organization edit</h1>
-    {% include 'partials/_alert.html' %}
-    {% for field in form %}
-        {% for error in field.errors %}
-            <p>{{ error }}</p>
-        {% endfor %}
-    {% endfor %}
-    <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
-      <label for="organization_name">Organization name:</label>
-      <input type="text" id="organization_name" name="organization_name" value="{{ form.initial.organization_name }}"><br><br>
-      <label for="organization_phone">Organization phone:</label>
-      <input type="text" id="organization_phone" name="organization_phone" {% if form.initial.organization_phone != none %}value="{{ form.initial.organization_phone }}"{% endif %}><br><br>
-      <label for="url">Organization url:</label>
-      <input type="text" id="url" name="url" value="{{ form.initial.url }}"><br><br>
-      <label for="organization_email">Organization email:</label>
-      <input type="email" id="organization_email" name="organization_email" {% if form.initial.organization_email != none %}value="{{ form.initial.organization_email }}"{% endif %}><br><br>
-      <label for="organization_alter_names">Organization alternative names:</label>
-      <input type="text" id="organization_alter_names" name="organization_alter_names" {% if form.initial.organization_alter_names != none %}value="{{ form.initial.organization_alter_names }}"{% endif %}><br><br>
-      <label for="organization_about">Organization about:</label>
-      <input type="text" id="organization_about" name="organization_about" {% if form.initial.organization_about != none %}value="{{ form.initial.organization_about }}"{% endif %}><br><br>
-      <label for="organization_specialization">Organization specialization:</label>
-      <input type="text" id="organization_specialization" name="organization_specialization" {% if form.initial.organization_specialization != none %}value="{{ form.initial.organization_specialization }}"{% endif %}><br><br>
-      <label for="organization_website">Organization website:</label>
-      <input type="text" id="organization_website" name="organization_website" {% if form.initial.organization_website != none %}value="{{ form.initial.organization_website }}"{% endif %}><br><br>
-      <label for="organization_address">Organization address:</label>
-      <input type="text" id="organization_address" name="organization_address" {% if form.initial.organization_address != none %}value="{{ form.initial.organization_address }}"{% endif %}><br><br>
-      <label for="number_of_employees">Number of employees:</label>
-      {{form.number_of_employees}} <br><br>
-      <label for="organization_logo">Logo:</label>
-      <input type="file" id="organization_logo" name="organization_logo" accept="iamge/"><br><br>
-      <label for="organization_header_logo">Header:</label>
-      <input type="file" id="organization_header_logo" name="organization_header_logo" accept="iamge/"><br><br>
-      <input class="ui-button ui-widget ui-corner-all" type="submit" value="Submit">
+    
+    <form action="" method="POST">{% csrf_token %}
+        {{ form.as_p }}
+        {% if skills.count < 12 %}
+            {{ skillForm.as_p }}
+        {% endif %}
+      <input class="btn btn-mdb-color" type="submit" value="Submit">
     </form><br>
-    <a class="ui-button ui-widget ui-corner-all" href="{% url 'organization_delete' form.initial.url %}">delete this organization</a>
+{#    <a class="btn btn-mdb-color" href="{% url 'vacancy_delete' vacancy_info.url %}" rel="modal:open">delete this vacancy</a>#}
 <br><br>
-
-        {% if  form.initial.organization_logo %}
-            <img src="{{ form.initial.organization_logo.url }}" alt="">
-        {% endif %}
-        {% if  form.initial.organization_header_logo %}
-            <br><img src="{{ form.initial.organization_header_logo.url }}" alt="" style="width: 500px">
-        {% endif %}
 {% endblock %}

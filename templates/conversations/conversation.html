@@ -1,40 +1,254 @@
 {% extends 'base.html' %}
-{% block title %}{{ organization_profile.organization_name }}{% endblock %}
+{% load static %}
+{% block title %}Conversation{% endblock %}
+{% block style %}<link rel="stylesheet" href="{% static 'styles/conversation.css' %}">{% endblock %}
 {% block content %}
-    {% if organization_profile.organization_logo %}
-        <img src="{{ organization_profile.organization_logo.url }}" alt="">
-    {% else %}
-        <p>Here is static image</p>
-    {% endif %}
-<h1>
-    {{organization_profile.organization_name}}
-    {% for owner in owners %}
-        {% if organization_profile.id == owner.organization.id and owner.role == '2'%}
-            <a class="btn btn-mdb-color" href="{% url 'organization_edit' organization_profile.url %}">Edit</a>
+
+{% if receiver_user %}
+<div class="container app">
+  <div class="row app-one">
+    <div class="col-sm-4 side" style="min-height: 550px; background: white">
+    {% for message in all_conversations %}
+        {% if message.conversation.starter == request.user %}
+            {% if not message.conversation.starter_delete%}
+                <a href="{% url 'user_conversation' message.conversation.receiver.username %}">
+            <div class="row sideBar"
+                 {% if not message.seen and message.user != request.user and receiver_user != message.conversation.receiver%}
+                    style="background: rgba(12,84,96,0.21)"
+                 {% elif receiver_user == message.conversation.receiver %}
+                    style="background: rgba(27,20,21,0.53)"
+                 {% endif %}>
+              <div class="row sideBar-body">
+                <div class="col-sm-3 col-xs-3 sideBar-avatar">
+                  <div class="avatar-icon">
+                      {% if message.conversation.receiver.profile_pic %}
+                        <img src="{{message.conversation.receiver.profile_pic.url}}">
+                      {% else %}
+                        <img src="">
+                      {% endif %}
+                  </div>
+                </div>
+                <div class="col-sm-9 col-xs-9 sideBar-main">
+                  <div class="row">
+                    <div class="col-sm-8 col-xs-8 sideBar-name">
+                      <span class="name-meta">
+                          {{message.conversation.receiver.first_name}} {{message.conversation.receiver.last_name}}
+                          {% if message.seen and message.user == request.user %}✓✓{% endif %}
+                    </span>
+                    </div>
+                    <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
+                        <span class="time-meta pull-right">{{message.message}}  </span>
+                    </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </a>
+            {% endif %}
+        {% else %}
+            {% if not message.conversation.receiver_delete%}
+                <a href="{% url 'user_conversation' message.conversation.starter.username %}">
+            <div class="row sideBar"
+                 {% if not message.seen and message.user != request.user and receiver_user != message.conversation.starter%}
+                    style="background: rgba(12,84,96,0.21)"
+                  {% elif receiver_user == message.conversation.starter %}
+                    style="background: rgba(27,20,21,0.53)"
+                 {% endif %}>
+          <div class="row sideBar-body">
+            <div class="col-sm-3 col-xs-3 sideBar-avatar">
+              <div class="avatar-icon">
+                  {% if message.conversation.starter.profile_pic %}
+                    <img src="{{message.conversation.starter.profile_pic.url}}">
+                  {% else %}
+                    <img src="">
+                  {% endif %}
+              </div>
+            </div>
+            <div class="col-sm-9 col-xs-9 sideBar-main">
+              <div class="row">
+                <div class="col-sm-8 col-xs-8 sideBar-name">
+                  <span class="name-meta">
+                      {{message.conversation.starter.first_name}} {{message.conversation.starter.last_name}}
+                      {% if message.seen and message.user == request.user %}✓✓{% endif %}
+                </span>
+                </div>
+                <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
+                  <span class="time-meta pull-right">{{message.message}}
+                </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </a>
+            {% endif %}
         {% endif %}
     {% endfor %}
-</h1>
-    {% if organization_profile.organization_about %}
-        <p>About me: {{ organization_profile.organization_about }}</p>
-    {% endif %}
-    {% if organization_profile.organization_email %}
-        <p>Email: {{ organization_profile.organization_email }}</p>
-    {% endif %}
-    {% if organization_profile.organization_phone %}
-        <p>Phone number: {{ organization_profile.organization_phone }}</p>
-    {% endif %}
-    {% if organization_profile.number_of_employees %}
-        <p>Employers: {{organization_profile.get_number_of_employees_display}}</p>
-    {% endif %}
-    {% if organization_profile.organization_address %}
-        <p>Main office address: {{ organization_profile.organization_address }}</p>
-    {% endif %}
-    {% if organization_profile.organization_website %}
-        <p>Organization website: {{ organization_profile.organization_website }}</p>
-    {% endif %}
-    {% if organization_profile.organization_header_logo %}
-        <img src="{{ organization_profile.organization_header_logo.url }}" alt="" style="width: 500px">
+    </div>
+    <div class="col-sm-8 conversation">
+        <a href="{% url 'profile' receiver_user.username %}">
+            <div class="row heading">
+                <div class="col-sm-2 col-md-1 col-xs-3 heading-avatar">
+                  <div class="heading-avatar-icon">
+                      {% if receiver_user.profile_pic %}
+                        <img src="{{receiver_user.profile_pic.url}}">
+                      {% else %}
+                        <img src="">
+                      {% endif %}
+
+                  </div>
+                </div>
+                <div class="col-sm-8 col-xs-7 heading-name">
+                  <span class="heading-name-meta">{{receiver_user.first_name}} {{receiver_user.last_name}}</span>
+                  <span class="heading-online">Last login: {{receiver_user.last_login}}</span>
+                  <a href="javascript:{document.getElementById('conversation_delete').submit()}">Delete conversation</a>
+                    <form action="{% url 'conversation_delete' this_conversation.pk%}" method="POST" id="conversation_delete">{% csrf_token %}
+                        <input type="hidden">
+                    </form>
+                </div>
+              </div>
+        </a>
+    {% if user_messages.has_previous or user_messages.has_next %}
+      <div class="row message" id="conversation">
+        <div class="row message-previous">
+          <div class="col-sm-12 previous">
+            {% if user_messages.has_previous %}
+                <a href="?p={{ user_messages.previous_page_number }}">Show Previous Messages!</a>
+            {% endif %}
+            {% if user_messages.has_next %}
+                <a href="?p={{ user_messages.paginator.num_pages }}">Show New Messages!</a>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+  {% for message in user_messages %}
+    {% if message.user != request.user %}
+        <div class="row message-body">
+          <div class="col-sm-12 message-main-receiver">
+            <div class="receiver">
+              <div class="message-text">
+               {{message.message}}
+              </div>
+              <span class="message-time pull-right">
+                {{message.date_created}}
+              </span>
+            </div>
+          </div>
+        </div>
     {% else %}
-        <p>Here is header image</p>
+        <div class="row message-body">
+          <div class="col-sm-12 message-main-sender">
+            <div class="sender">
+              <div class="message-text">
+                {{message.message}}
+              </div>
+              <span class="message-time pull-right">
+                {{message.date_created}}
+              </span>
+            </div>
+          </div>
+        </div>
     {% endif %}
+{% endfor %}
+        {% if last_message.user != receiver_user and last_message.seen %}
+        <div class="row message-body">
+          <div class="col-sm-12 message-main-sender">
+            <small>Seen</small>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      <div class="row reply">
+          <div class="col-sm-12 col-xs-12 reply-main">
+              <form action="{% url 'message_sent' this_conversation.id receiver_user.username %}" method="POST" style="display: flex">{% csrf_token %}
+                  <textarea class="form-control" rows="1" id="message" name="message" required></textarea>
+                  <input class="btn btn-info" type="submit" value="Sent">
+              </form>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="container app">
+  <div class="row app-one">
+    <div class="col-sm-4 side" style="min-height: 550px; background: white">
+    {% for message in messages_all %}
+        {% if message.conversation.starter == request.user %}
+            {% if not message.conversation.starter_delete%}
+                <a href="{% url 'user_conversation' message.conversation.receiver.username %}">
+            <div class="row sideBar" {% if not message.seen and message.user != request.user %}style="background: rgba(12,84,96,0.21)"{% endif %}>
+              <div class="row sideBar-body">
+                <div class="col-sm-3 col-xs-3 sideBar-avatar">
+                  <div class="avatar-icon">
+                      {% if message.conversation.receiver.profile_pic %}
+                        <img src="{{message.conversation.receiver.profile_pic.url}}">
+                      {% else %}
+                        <img src="">
+                      {% endif %}
+                  </div>
+                </div>
+                <div class="col-sm-9 col-xs-9 sideBar-main">
+                  <div class="row">
+                    <div class="col-sm-8 col-xs-8 sideBar-name">
+                      <span class="name-meta">
+                          {{message.conversation.receiver.first_name}} {{message.conversation.receiver.last_name}}
+                          {% if message.seen and message.user == request.user %}✓✓{% endif %}
+                    </span>
+                    </div>
+                    <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
+                        <span class="time-meta pull-right">{{message.message}}  </span>
+                    </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </a>
+            {% endif %}
+        {% else %}
+            {% if not message.conversation.receiver_delete%}
+                <a href="{% url 'user_conversation' message.conversation.starter.username %}">
+            <div class="row sideBar" {% if not message.seen and message.user != request.user %}style="background: rgba(12,84,96,0.21)"{% endif %}>
+          <div class="row sideBar-body">
+            <div class="col-sm-3 col-xs-3 sideBar-avatar">
+              <div class="avatar-icon">
+                  {% if message.conversation.starter.profile_pic %}
+                    <img src="{{message.conversation.starter.profile_pic.url}}">
+                  {% else %}
+                    <img src="">
+                  {% endif %}
+              </div>
+            </div>
+            <div class="col-sm-9 col-xs-9 sideBar-main">
+              <div class="row">
+                <div class="col-sm-8 col-xs-8 sideBar-name">
+                  <span class="name-meta">
+                      {{message.conversation.starter.first_name}} {{message.conversation.starter.last_name}}
+                      {% if message.seen and message.user == request.user %}✓✓{% endif %}
+                </span>
+                </div>
+                <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
+                  <span class="time-meta pull-right">{{message.message}}
+                </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </a>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    </div>
+    <div class="col-sm-8 conversation">
+        <div class="h-100 d-flex justify-content-center align-items-center">
+            Pick conversation
+        </div>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+
 {% endblock %}

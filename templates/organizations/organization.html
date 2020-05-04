@@ -8,9 +8,11 @@
     {% endif %}
 <h1>
     {{organization_profile.organization_name}}
-    {% if organization_profile.user == request.user %}
-         <a href="{% url 'organization_edit' organization_profile.url %}">Edit</a>
-    {% endif %}
+    {% for owner in owners %}
+        {% if organization_profile.id == owner.organization.id and owner.role == '2'%}
+            <a class="btn btn-mdb-color" href="{% url 'organization_edit' organization_profile.url %}">Edit</a>
+        {% endif %}
+    {% endfor %}
 </h1>
     {% if organization_profile.organization_about %}
         <p>About me: {{ organization_profile.organization_about }}</p>

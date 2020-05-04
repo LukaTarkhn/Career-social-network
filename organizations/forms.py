@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from .models import Organization
+from .models import Organization, OrganizationOwner
 
 
 class OrganizationAddForm(ModelForm):
@@ -37,3 +37,23 @@ class OrganizationEditForm(ModelForm):
         if commit:
             organization_info.save()
         return organization_info
+
+
+class OrganizationOwnerAddForm(ModelForm):
+    class Meta:
+        model = OrganizationOwner
+        fields = []
+
+
+class OrganizationOwnerStatusChange(ModelForm):
+    class Meta:
+        model = OrganizationOwner
+        fields = ['role']
+
+        def save(self, commit=True):
+            owner = self.instance
+            owner.role = self.cleaned_data['role']
+
+            if commit:
+                owner.save()
+            return owner

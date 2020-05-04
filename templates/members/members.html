@@ -13,7 +13,7 @@
                     {% endif %}
                     <p>Name: {{ account.first_name }} {{ account.last_name }}</p>
                     <p>Email: {{ account.email }}</p>
-                    <a href="{% url 'profile' account.username %}">View resume</a>
+                    <a class="btn btn-mdb-color" href="{% url 'profile' account.username %}">View resume</a>
                 </div>
             {% endif %}
         {% endfor %}

@@ -8,14 +8,14 @@
     <title>Sign-in</title>
 </head>
 <body>
-    {% include 'partials/_alert.html' %}
+    
     <form action="{% url 'login' %}" method="POST">{% csrf_token %}
         <input type="email" name="email" required placeholder="Email"> <br>
         <input type="password" name="password" required placeholder="Password"> <br>
-        <input type="submit" value="Log in"> <br>
+        <input class="btn btn-mdb-color" type="submit" value="Log in"> <br>
     </form>
-    <a href="{% url 'reset_password' %}">Reset password</a>
+    <a class="btn btn-mdb-color" href="{% url 'reset_password' %}">Reset password</a>
 
-<a href="{% url 'home' %}">Home</a>
+<a class="btn btn-mdb-color" href="{% url 'home' %}">Home</a>
 </body>
 </html>
